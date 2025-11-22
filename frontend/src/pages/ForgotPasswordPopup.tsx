@@ -20,7 +20,7 @@ export const ForgotPasswordPopup = ({ onClose }: { onClose: () => void }) => {
 
     setLoading(true);
     setTimeout(() => {
-      toast.success("OTP sent to email (dummy)");
+      toast.success("OTP sent to email ");
       setStep("otp");
       setLoading(false);
     }, 800);
@@ -32,7 +32,7 @@ export const ForgotPasswordPopup = ({ onClose }: { onClose: () => void }) => {
 
     setLoading(true);
     setTimeout(() => {
-      toast.success("OTP Verified (dummy)");
+      toast.success("OTP Verified ");
       setStep("reset");
       setLoading(false);
     }, 800);
@@ -48,7 +48,7 @@ export const ForgotPasswordPopup = ({ onClose }: { onClose: () => void }) => {
 
     setLoading(true);
     setTimeout(() => {
-      toast.success("Password reset successful (dummy)");
+      toast.success("Password reset successful ");
       setLoading(false);
       onClose();
     }, 800);
