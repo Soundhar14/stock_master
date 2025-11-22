@@ -9,7 +9,7 @@ import Cookies from 'js-cookie'
 import type {
   signInRequestType,
   SignInResponseType,
-} from '@/types/authApiTypes'
+} from '../types/authApiTypes'
 
 const signInRequest = async (
   data: signInRequestType
@@ -36,7 +36,7 @@ const signInRequest = async (
     }
   } catch (error: unknown) {
     if (error instanceof ZodError) {
-      const firstError = error.errors?.[0]?.message ?? 'Invalid input'
+      const firstError = error.issues?.[0]?.message ?? 'Invalid input'
       toast.error(firstError)
     } else if (axios.isAxiosError(error)) {
       toast.error(error.response?.data?.message || 'Invalid credentials')
