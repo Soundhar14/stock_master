@@ -8,7 +8,8 @@ export const appRoutes = {
     master: '/master',
     children: {
       warehouse : '/master/warehouse',
-      products:"/master/products"
+      products:"/master/products",
+      Category:"/master/category",
     }
   }
 }
