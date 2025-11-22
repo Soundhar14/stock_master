@@ -1,0 +1,22 @@
+# Backend build artifacts
+stock_master_backend/target/
+stock_master_backend/.mvn/wrapper/maven-wrapper.jar
+stock_master_backend/mvnw
+stock_master_backend/mvnw.cmd
+
+# IDE / local files
+*.iml
+*.log
+.idea/
+.vscode/
+
+# Node / frontend files (since Dockerfile only builds backend)
+frontend/
+node_modules/
+
+# Git
+.git
+.gitignore
+
+# OS files
+.DS_Store
