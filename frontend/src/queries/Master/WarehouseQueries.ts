@@ -9,23 +9,27 @@ import type { Warehouse } from '../../types/Master/Warehouse'
 import { authHandler } from '../../utils/authHandler'
 import { handleApiError } from '../../utils/handleApiError'
 
-const formatLocationsForCreate = (
-  locations: Warehouse['locations']
-): string[] => {
-  return (locations ?? [])
-    .map((location) => location.name?.trim() ?? '')
-    .filter((name) => Boolean(name))
-}
-
-type UpdateLocationPayload = {
+type LocationPayload = {
   id?: number
   name: string
+}
+
+const formatLocationsForCreate = (
+  locations: Warehouse['locations']
+): LocationPayload[] => {
+  return (locations ?? [])
+    .map((location) => {
+      const name = location.name?.trim()
+      if (!name) return null
+      return { name }
+    })
+    .filter((location): location is LocationPayload => Boolean(location))
 }
 
 //  to send only strings when creating and id+string when updating
 const formatLocationsForUpdate = (
   locations: Warehouse['locations']
-): UpdateLocationPayload[] => {
+): LocationPayload[] => {
   return (locations ?? [])
     .map((location) => {
       const name = location.name?.trim()
@@ -37,7 +41,7 @@ const formatLocationsForUpdate = (
 
       return { name }
     })
-    .filter((location): location is UpdateLocationPayload => Boolean(location))
+    .filter((location): location is LocationPayload => Boolean(location))
 }
 
 const warehouseFieldsToTrack: Array<keyof Warehouse> = [
