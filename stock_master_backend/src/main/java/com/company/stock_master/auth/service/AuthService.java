@@ -6,10 +6,11 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import com.company.stock_master.auth.config.JwtUtil;
 import com.company.stock_master.auth.dto.JwtResponse;
@@ -61,7 +62,7 @@ public class AuthService {
             return ResponseEntity.badRequest().body("Email already exists");
         }
 
-        if(userRepository.existsByPhone(request.getPhone())) {
+        if (userRepository.existsByPhone(request.getPhone())) {
             return ResponseEntity.badRequest().body("Phone number already exists");
         }
 
@@ -87,20 +88,24 @@ public class AuthService {
         return ResponseEntity.ok("User registered successfully with role: " + role.getName());
     }
 
-    public ResponseEntity<?> loginUser(LoginRequest request, BindingResult result) {
+    @PostMapping("/login")
+    public ResponseEntity<?> loginUser(@RequestBody LoginRequest request, BindingResult result) {
         if (result.hasErrors()) {
             return ResponseEntity.badRequest().body(result.getAllErrors());
         }
 
         try {
+
             Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(
-                            request.getEmail(), request.getPassword()));
+                    new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
-            String token = jwtUtil.generateToken((UserDetails) authentication.getPrincipal());
+
+            CustomUserDetails customUser = (CustomUserDetails) authentication.getPrincipal();
+            String token = jwtUtil.generateToken(customUser.getUser()); 
 
             return ResponseEntity.ok(new JwtResponse(token));
+
         } catch (Exception e) {
             return ResponseEntity.status(401).body("Invalid email or password");
         }
@@ -108,8 +113,7 @@ public class AuthService {
 
     @Transactional
     public ResponseEntity<?> registerAdmin(RegisterRequest request, BindingResult result) {
-        // For provider-only use. Restricted access must be applied in
-        // controller/security layer.
+
         request.setRoleName("ADMIN");
         return registerUser(request, result);
     }
