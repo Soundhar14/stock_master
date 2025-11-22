@@ -4,7 +4,6 @@ import ConfigCard, {
 import PageHeader from '../../components/masterPage.components/PageHeader'
 import { appRoutes } from '../../routes/appRoutes'
 
-
 export const MasterPage = () => {
   const configCards: ConfigCardtype[] = [
     {
@@ -33,6 +32,15 @@ export const MasterPage = () => {
       labelColor: 'bg-yellow-100 text-yellow-800',
       btnText: 'Configure',
       navigateUrl: appRoutes.masterRoutes.children.Category,
+    },
+    {
+      img: '/icons/Configpage/Desigination.svg',
+      title: 'Users',
+      desc: 'Manage application users, roles, and contact details in one place.',
+      label: 'Administration',
+      labelColor: 'bg-blue-100 text-blue-800',
+      btnText: 'Configure',
+      navigateUrl: appRoutes.masterRoutes.children.users,
     },
     // {
     //   img: '/icons/Configpage/Resigination.png',
@@ -119,11 +127,11 @@ export const MasterPage = () => {
 
   return (
     <div className="flex w-full max-w-[1590px] flex-col gap-6">
-      <div className="flex items-center justify-between rounded-lg bg-white px-3 py-3 shadow-sm">
-        <div className="flex flex-col">
+      <section className="table-container flex w-full flex-col gap-4 rounded-xl bg-white p-4 shadow-sm">
+        <header className="flex flex-row items-center justify-between">
           <PageHeader title="Master Configuration" />
-        </div>
-      </div>
+        </header>
+      </section>
       <div className="grid grid-cols-2 gap-6 md:grid-cols-3 lg:grid-cols-4">
         {configCards.map((card, index) => (
           <ConfigCard

@@ -73,13 +73,7 @@ const DeliveryPage = () => {
       searchable: true,
       className: 'min-w-[160px]',
     },
-    {
-      headingTitle: 'From Location',
-      accessVar: 'fromLocationId',
-      sortable: true,
-      searchable: true,
-      className: 'min-w-[140px]',
-    },
+
     {
       headingTitle: 'Schedule Date',
       accessVar: 'scheduleDate',
@@ -95,19 +89,93 @@ const DeliveryPage = () => {
       searchable: true,
       className: 'min-w-[150px]',
     },
+
     {
-      headingTitle: '# Items',
-      accessVar: (row: DeliveryOrder) => row.items.length,
-      sortable: true,
-      searchable: false,
-      className: 'min-w-[100px] text-right',
-    },
-    {
-      headingTitle: 'Delivery Address',
-      accessVar: 'deliveryAddress',
-      sortable: false,
-      searchable: true,
-      className: 'min-w-[220px] max-w-[320px]',
+      headingTitle: '#DropDown',
+      render: (_, row: DeliveryOrder) => (
+        <section className="flex w-full flex-col gap-3">
+          <div className="grid gap-3 rounded-2xl border border-slate-200 bg-white p-4 text-sm text-slate-700 md:grid-cols-3">
+            <div>
+              <p className="text-xs font-semibold text-slate-500 uppercase">
+                Delivery Address
+              </p>
+              <p className="font-medium text-slate-900">
+                {row.deliveryAddress || 'Not provided'}
+              </p>
+            </div>
+            <div>
+              <p className="text-xs font-semibold text-slate-500 uppercase">
+                From Location
+              </p>
+              <p className="font-medium text-slate-900">
+                {row.fromLocationId || 'Not specified'}
+              </p>
+            </div>
+            <div>
+              <p className="text-xs font-semibold text-slate-500 uppercase">
+                Notes
+              </p>
+              <p className="font-medium text-slate-900">
+                {row.notes || 'No additional notes'}
+              </p>
+            </div>
+          </div>
+          <header className="flex flex-row items-center justify-between">
+            <p className="text-sm font-semibold text-slate-700">
+              Products ({row.items.length})
+            </p>
+          </header>
+          <div className="flex flex-col divide-y divide-slate-200 overflow-hidden rounded-2xl border border-slate-200 bg-white">
+            {row.items.length === 0 && (
+              <p className="px-4 py-3 text-sm text-slate-500">
+                No products linked to this delivery.
+              </p>
+            )}
+            {row.items.map((item) => (
+              <article
+                key={item.id}
+                className="grid grid-cols-1 gap-2 px-4 py-3 text-sm text-slate-600 md:grid-cols-4"
+              >
+                <div>
+                  <p className="text-xs font-semibold text-slate-500 uppercase">
+                    Product
+                  </p>
+                  <p className="font-medium text-slate-800">
+                    {item.product?.name ?? 'Unnamed Product'}
+                  </p>
+                  <p className="text-xs text-slate-500">
+                    SKU: {item.product?.sku ?? '—'}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-xs font-semibold text-slate-500 uppercase">
+                    Quantity
+                  </p>
+                  <p className="font-medium text-slate-800">
+                    {item.quantity} {item.unit}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-xs font-semibold text-slate-500 uppercase">
+                    Notes
+                  </p>
+                  <p className="font-medium text-slate-700">
+                    {item.notes ?? '—'}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-xs font-semibold text-slate-500 uppercase">
+                    Product Cost
+                  </p>
+                  <p className="font-medium text-slate-700">
+                    {item.product?.cost ?? '—'}
+                  </p>
+                </div>
+              </article>
+            ))}
+          </div>
+        </section>
+      ),
     },
   ]
 
@@ -117,17 +185,19 @@ const DeliveryPage = () => {
         <header className="flex flex-row items-center justify-between">
           <PageHeader title="Delivery Management" />
         </header>
-
-        <GenericTable
-          isMasterTable
-          data={deliveries ?? []}
-          dataCell={dataCell}
-          isLoading={isLoading}
-          rowKey={(row) => row.id}
-          tableTitle="Delivery Orders"
-          messageWhenNoData="No delivery orders available."
-        />
       </section>
+      <GenericTable
+        isMasterTable
+        isADropDown
+        data={deliveries ?? []}
+        dataCell={dataCell}
+        isLoading={isLoading}
+        rowKey={(row) => row.id}
+        onEdit={() => {}}
+        onDelete={() => {}}
+        tableTitle="Delivery Orders"
+        messageWhenNoData="No delivery orders available."
+      />
     </main>
   )
 }
