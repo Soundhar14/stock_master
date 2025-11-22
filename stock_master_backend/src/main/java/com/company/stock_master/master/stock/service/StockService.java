@@ -16,5 +16,7 @@ public interface StockService {
     public List<StockResponse> getAll();
 
     public void deleteById(Long id);
+
+    public void reduceStock(Long warehouseId, Long locationId, Long productId, long qty);
     
 }
