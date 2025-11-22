@@ -1,7 +1,6 @@
 import { motion } from 'framer-motion'
 import React from 'react'
 import NotificationCenter from '../common/NotificationCenter'
-import ServicesSearchBar from '../common/ServicesSearchBar'
 import ProfileMenu from '../common/ProfileMenu'
 
 interface TopNavProps {
@@ -65,10 +64,7 @@ export const TopNav: React.FC<TopNavProps> = ({ userName, formattedDate }) => {
           </div>
         </div>
 
-        {/* Search bar */}
-        <div style={{ zoom: 0.9 }} className="mx-8 max-w-lg flex-1 shadow-sm">
-          <ServicesSearchBar />
-        </div>
+
 
         {/* Action Buttons */}
         <motion.div

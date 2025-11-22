@@ -1,4 +1,4 @@
-import { useFetchEmployees } from '@/queries/employeeQueries/employeesQuery'
+
 import { motion } from 'framer-motion'
 import React from 'react'
 
@@ -403,7 +403,6 @@ export const AutoSuggestInput: React.FC<AutoSuggestInputProps> = ({
   const [selectedIndex, setSelectedIndex] = useState(-1)
   const listRef = useRef<HTMLUListElement>(null)
 
-  const { data: suggestedEmployee, isLoading, refetch } = useFetchEmployees()
 
   // debounce controlled/internal inputValue
   useEffect(() => {
@@ -411,26 +410,6 @@ export const AutoSuggestInput: React.FC<AutoSuggestInputProps> = ({
     return () => clearTimeout(timer)
   }, [inputValue])
 
-  useEffect(() => {
-    if (debouncedValue.length > 1) {
-      refetch()
-      const employees = suggestedEmployee?.data || []
-      if (employees.length > 0) {
-        setSuggestions(
-          employees.map((item) => ({
-            id: item.id!,
-            label: item.code,
-          }))
-        )
-      } else {
-        setSuggestions([{ id: 0, label: 'No results found' }])
-      }
-      setIsVisible(true)
-    } else {
-      setSuggestions([])
-      setIsVisible(false)
-    }
-  }, [debouncedValue, suggestedEmployee, refetch])
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'ArrowDown') {
@@ -494,7 +473,7 @@ export const AutoSuggestInput: React.FC<AutoSuggestInputProps> = ({
               }`}
             >
               <div className="text-sm font-medium">
-                {isLoading ? 'Loading...' : item.label}
+                {  item.label}
               </div>
             </li>
           ))}

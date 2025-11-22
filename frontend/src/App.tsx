@@ -28,6 +28,7 @@ export default function AppRoutes() {
           path="/"
           element={<Navigate to={appRoutes.dashboard} replace />}
         />
+            
 
         {/* Protected main routes */}
         <Route element={<ProtectedRoute />}>
@@ -36,7 +37,8 @@ export default function AppRoutes() {
               path={appRoutes.dashboard}
               element={<h1 className="p-4 text-2xl font-bold">Dashboard</h1>}
             />
-
+          <Route element={<h1>na tha da leo</h1>}
+          path={appRoutes.home}/>
             {/* Add more protected pages here */}
             {/* <Route path={appRoutes.products} element={<ProductsPage />} /> */}
             {/* <Route path={appRoutes.receipts} element={<ReceiptsPage />} /> */}
