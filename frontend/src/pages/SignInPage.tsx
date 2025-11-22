@@ -8,9 +8,11 @@ import ButtonSm from '../components/common/Buttons'
 import Spinner from '../components/common/Spinner'
 import { toast } from 'react-toastify'
 import { appRoutes } from '../routes/appRoutes'
+import { ForgotPasswordPopup } from './ForgotPasswordPopup'
 
 export const SignInPage = () => {
-  const location = useLocation()
+  const location = useLocation()  
+  const [isForgotOpen, setIsForgotOpen] = useState(false);
 
   const [showPassword, setShowPassword] = useState(false)
   const [email, setemail] = useState('')
@@ -97,7 +99,18 @@ export const SignInPage = () => {
                   />
                 </button>
               </div>
+
+
             </div>
+                          <div className="flex w-full justify-end -mt-2">
+  <button
+    type="button"
+    onClick={() => setIsForgotOpen(true)}
+    className="text-xs text-blue-600 cursor-pointer hover:underline"
+  >
+    Forgot Password?
+  </button>
+</div>
 
          {/* Submit Button */}
 <ButtonSm
@@ -115,6 +128,11 @@ export const SignInPage = () => {
           </form>
         </div>
       </div>
+
+      {isForgotOpen && (
+  <ForgotPasswordPopup onClose={() => setIsForgotOpen(false)} />
+)}
+
 
       {/* Right Side - Hidden on Mobile */}
       <div className="relative hidden w-full items-center justify-center lg:flex lg:w-1/2">
