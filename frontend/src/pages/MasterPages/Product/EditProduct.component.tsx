@@ -152,39 +152,45 @@ const ProductEdit = ({
                 ? "Product Configuration"
                 : `${title || "Product"} Configuration`}
             </h1>
+<div className="flex gap-3">
+  
+  {/* Cancel button -> SHOW only in edit mode & when dirty */}
+{(formState === "edit" || formState === "display") && isProductChanged && (
+  <ButtonSm
+    text="Cancel"
+    state="outline"
+    type="button"
+    onClick={handleCancel}
+  />
+)}
 
-            <div className="flex gap-3">
-              <ButtonSm
-                text="Cancel"
-                state="outline"
-                type="button"
-                onClick={handleCancel}
-              />
 
-              {/* Create */}
-              {formState === "create" && (
-                <ButtonSm
-                  className="text-white"
-                  text={isPending ? "Creating..." : "Create New"}
-                  state="default"
-                  type="submit"
-                />
-              )}
+  {/* Create button */}
+  {formState === "create" && (
+    <ButtonSm
+      className="text-white"
+      text={isPending ? "Creating..." : "Create New"}
+      state="default"
+      type="submit"
+    />
+  )}
 
-              {/* Edit */}
-              {formState === "edit" && (
-                <ButtonSm
-                  className="text-white"
-                  text={isUpdatePending ? "Updating..." : "Save Changes"}
-                  state="default"
-                  disabled={!isProductChanged}
-                  type="button"
-                  onClick={() => {
-                    if (newProductData?.id) updateProduct(newProductData);
-                  }}
-                />
-              )}
-            </div>
+  {/* Edit Save button */}
+  {formState === "edit" && (
+    <ButtonSm
+      className="text-white"
+      text={isUpdatePending ? "Updating..." : "Save Changes"}
+      state="default"
+      disabled={!isProductChanged}
+      type="button"
+      onClick={() => {
+        if (newProductData?.id) updateProduct(newProductData);
+      }}
+    />
+  )}
+
+</div>
+
           </header>
 
           {/* FORM FIELDS */}

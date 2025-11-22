@@ -1,6 +1,6 @@
 import ButtonSm from "../../../components/common/Buttons";
 import { useDeleteProduct } from "../../../queries/Master/productQueries";
-import type { Product } from "../../../types/Master/productTypes";
+import type { ProductResponse } from "../../../types/Master/productTypes";
 
 export const DeleteProductDialogBox = ({
   setIsDeleteProductDialogOpen,
@@ -8,7 +8,7 @@ export const DeleteProductDialogBox = ({
   onDeleted,
 }: {
   setIsDeleteProductDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  product: Product;
+  product: ProductResponse;
   onDeleted?: () => void;
 }) => {
   const { mutate: deleteProduct, isPending: isDeleting } = useDeleteProduct();
