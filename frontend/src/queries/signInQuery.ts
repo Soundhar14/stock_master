@@ -16,6 +16,7 @@ const signInRequest = async (
 ): Promise<SignInResponseType> => {
   try {
     const parsed = SignInSchema.parse(data)
+    console.log(parsed)
     const response = await axiosInstance.post(apiRoutes.signin, parsed, {
       timeout: 30000,
     })
@@ -48,6 +49,7 @@ const signInRequest = async (
 }
 
 export const useSignInMutation = () => {
+  
   return useMutation({
     mutationFn: signInRequest,
   })
