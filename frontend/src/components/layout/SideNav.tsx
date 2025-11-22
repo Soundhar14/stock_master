@@ -5,22 +5,20 @@ import { motion } from 'motion/react'
 const SideNav: React.FC = () => {
   const [activeRoute, setActiveRoute] = useState<string>('')
 
- useEffect(() => {
-  const currentPath = location.pathname
+  useEffect(() => {
+    const currentPath = location.pathname
 
-  if (currentPath.startsWith('/master')) {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setActiveRoute(appRoutes.masterRoutes.master)
-  }
- }, [location.pathname])
+    if (currentPath.startsWith('/master')) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setActiveRoute(appRoutes.masterRoutes.master)
+    }
+  }, [location.pathname])
 
   const navigateToRoute = useCallback((route: string) => {
     setActiveRoute(route)
     window.history.pushState({}, '', route)
     window.dispatchEvent(new PopStateEvent('popstate'))
   }, [])
-
-  
 
   const isRouteActive = (route: string): boolean => {
     return activeRoute === route
@@ -49,14 +47,20 @@ const SideNav: React.FC = () => {
               activeIconSrc="/icons/sideNavIcons/dashboard-icon-active.svg"
               onClick={() => navigateToRoute(appRoutes.dashboard)}
             />
-           <NavigationButton
+            <NavigationButton
               labelName="Master"
               isActive={isRouteActive(appRoutes.masterRoutes.master)}
               iconSrc="/icons/sideNavIcons/master-icon.svg"
               activeIconSrc="/icons/sideNavIcons/master-icon-active.svg"
               onClick={() => navigateToRoute(appRoutes.masterRoutes.master)}
             />
-            
+            <NavigationButton
+              labelName="Stock"
+              isActive={isRouteActive(appRoutes.stockManagement)}
+              iconSrc="/icons/sideNavIcons/approval-icon.svg"
+              activeIconSrc="/icons/sideNavIcons/approval-icon-active.svg"
+              onClick={() => navigateToRoute(appRoutes.stockManagement)}
+            />
           </div>
         </motion.div>
       </motion.section>

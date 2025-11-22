@@ -1,19 +1,16 @@
-import { Suspense } from "react";
-import { Routes, Route, Navigate } from "react-router-dom";
-import Spinner from "./components/common/Spinner";
-import { appRoutes } from "./routes/appRoutes";
-import { SignInPage } from "./pages/SignInPage";
-import ProtectedRoute from "./components/layout/ProtectedRoute";
-import MainLayout from "./components/layout/MainLayout";
-import { ErrorPageContent } from "./pages/ErrorPage";
-import ProductPage from "./pages/MasterPages/Product/ProductPage";
-import WarehousesPage from "./pages/MasterPages/Warehouse/WarehousePage";
-import MasterPage from "./pages/MasterPages/MasterPage";
-import CategoriesPage from "./pages/MasterPages/Category/CategoryPage";
-
-
-
-
+import { Suspense } from 'react'
+import { Routes, Route, Navigate } from 'react-router-dom'
+import Spinner from './components/common/Spinner'
+import { appRoutes } from './routes/appRoutes'
+import { SignInPage } from './pages/SignInPage'
+import ProtectedRoute from './components/layout/ProtectedRoute'
+import MainLayout from './components/layout/MainLayout'
+import { ErrorPageContent } from './pages/ErrorPage'
+import ProductPage from './pages/MasterPages/Product/ProductPage'
+import WarehousesPage from './pages/MasterPages/Warehouse/WarehousePage'
+import MasterPage from './pages/MasterPages/MasterPage'
+import CategoriesPage from './pages/MasterPages/Category/CategoryPage'
+import StockManagementPage from './pages/StockManagementPage'
 
 export default function AppRoutes() {
   return (
@@ -33,7 +30,6 @@ export default function AppRoutes() {
           path="/"
           element={<Navigate to={appRoutes.dashboard} replace />}
         />
-            
 
         {/* Protected main routes */}
         <Route element={<ProtectedRoute />}>
@@ -44,21 +40,29 @@ export default function AppRoutes() {
             />
 
             {/* Master page  */}
-            
-            <Route path={appRoutes.masterRoutes.master}
-            element={<MasterPage/>}/>
-            
-            <Route path={appRoutes.masterRoutes.children.warehouse}
-            element={<WarehousesPage/>}
-            />
-            <Route path={appRoutes.masterRoutes.children.Category}
-            element={<CategoriesPage/>}
-            />
-            <Route path={appRoutes.masterRoutes.children.products}
-            element={<ProductPage/>}
+
+            <Route
+              path={appRoutes.masterRoutes.master}
+              element={<MasterPage />}
             />
 
-          
+            <Route
+              path={appRoutes.masterRoutes.children.warehouse}
+              element={<WarehousesPage />}
+            />
+            <Route
+              path={appRoutes.masterRoutes.children.Category}
+              element={<CategoriesPage />}
+            />
+            <Route
+              path={appRoutes.masterRoutes.children.products}
+              element={<ProductPage />}
+            />
+            {/* Stock managment page */}
+            <Route
+              path={appRoutes.stockManagement}
+              element={<StockManagementPage />}
+            />
           </Route>
         </Route>
 
@@ -67,12 +71,12 @@ export default function AppRoutes() {
           path="*"
           element={
             <ErrorPageContent
-              error={new Error("Page Not Found: 404")}
+              error={new Error('Page Not Found: 404')}
               onRefresh={() => window.location.reload()}
             />
           }
         />
       </Routes>
     </Suspense>
-  );
+  )
 }

@@ -1,5 +1,3 @@
-
-
 export const appRoutes = {
   home: '/',
   signIn: '/signin',
@@ -7,9 +5,10 @@ export const appRoutes = {
   masterRoutes: {
     master: '/master',
     children: {
-      warehouse : '/master/warehouse',
-      products:"/master/products",
-      Category:"/master/category",
-    }
-  }
+      warehouse: '/master/warehouse',
+      products: '/master/products',
+      Category: '/master/category',
+    },
+  },
+  stockManagement: '/stock-management',
 }

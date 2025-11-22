@@ -9,7 +9,7 @@ export default defineConfig([
   globalIgnores(['dist']),
   {
     rules: {
-    "react-hooks/exhaustive-deps": "off"
+      'react-hooks/exhaustive-deps': 'off',
     },
     files: ['**/*.{ts,tsx}'],
     extends: [
