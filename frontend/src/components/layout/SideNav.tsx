@@ -9,19 +9,27 @@ const SideNav: React.FC = () => {
 
   useEffect(() => {
     const currentPath = location.pathname
+    let nextRoute = activeRoute
 
-    if (currentPath.startsWith('/master')) {
-      setActiveRoute(appRoutes.masterRoutes.master)
+    if (currentPath.startsWith(appRoutes.masterRoutes.children.users)) {
+      nextRoute = appRoutes.masterRoutes.children.users
+    } else if (currentPath.startsWith('/master')) {
+      nextRoute = appRoutes.masterRoutes.master
     } else if (currentPath.startsWith('/stock-management')) {
-      setActiveRoute(appRoutes.stockManagement)
+      nextRoute = appRoutes.stockManagement
     } else if (currentPath.startsWith('/dashboard')) {
-      setActiveRoute(appRoutes.dashboard)
+      nextRoute = appRoutes.dashboard
     } else if (currentPath.startsWith('/delivery')) {
-      setActiveRoute(appRoutes.delivery)
+      nextRoute = appRoutes.delivery
     } else if (currentPath.startsWith('/internal-transfer')) {
-      setActiveRoute(appRoutes.internalTransfer)
+      nextRoute = appRoutes.internalTransfer
     }
-  }, [location.pathname])
+
+    if (nextRoute !== activeRoute) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setActiveRoute(nextRoute)
+    }
+  }, [location.pathname, activeRoute])
 
   const navigateToRoute = useCallback((route: string) => {
     setActiveRoute(route)
@@ -40,10 +48,10 @@ const SideNav: React.FC = () => {
   return (
     <div
       style={{ zoom: 0.85 }}
-      className={`floating-container bg:white h-full relative flex border-r-2 border-gray-200 shadow-sm transition-all duration-300`}
+      className={`floating-container bg:white relative flex h-full border-r-2 border-gray-200 shadow-sm transition-all duration-300`}
     >
       <motion.section
-        className={`flex flex-col h-full justify-between bg-white transition-all duration-300`}
+        className={`flex h-full flex-col justify-between bg-white transition-all duration-300`}
         animate={{ x: 0, opacity: 1 }}
       >
         {/* MAIN NAVIGATION */}
@@ -53,8 +61,7 @@ const SideNav: React.FC = () => {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.2, duration: 0.5 }}
         >
-          <div className="flex flex-col gap-3 overflow-y-auto h-full">
-
+          <div className="flex h-full flex-col gap-3 overflow-y-auto">
             <NavigationButton
               labelName="Dashboard"
               isActive={isRouteActive(appRoutes.dashboard)}
@@ -69,6 +76,15 @@ const SideNav: React.FC = () => {
               iconSrc="/icons/sideNavIcons/master-icon.svg"
               activeIconSrc="/icons/sideNavIcons/master-icon-active.svg"
               onClick={() => navigateToRoute(appRoutes.masterRoutes.master)}
+            />
+            <NavigationButton
+              labelName="Users"
+              isActive={isRouteActive(appRoutes.masterRoutes.children.users)}
+              iconSrc="/icons/sideNavIcons/users-icon.svg"
+              activeIconSrc="/icons/sideNavIcons/users-icon-active.svg"
+              onClick={() =>
+                navigateToRoute(appRoutes.masterRoutes.children.users)
+              }
             />
 
             <NavigationButton
@@ -94,28 +110,26 @@ const SideNav: React.FC = () => {
               activeIconSrc="/icons/sideNavIcons/memo-icon-active.svg"
               onClick={() => navigateToRoute(appRoutes.internalTransfer)}
             />
-
           </div>
         </motion.div>
 
         {/* LOGOUT BUTTON USING UNICODE */}
         <motion.div
-          className="flex flex-col items-center mb-8 select-none"
+          className="mb-8 flex flex-col items-center select-none"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.4, duration: 0.5 }}
         >
-      <button
-  onClick={handleLogout}
-  className="flex flex-col items-center justify-center p-3 rounded-xl hover:bg-red-50 transition-all cursor-pointer"
->
-  <Power className="w-7 h-7 text-red-600 hover:text-red-700" />
-  <span className="text-sm text-red-600 font-medium mt-1">
-    Logout
-  </span>
-</button>
+          <button
+            onClick={handleLogout}
+            className="flex cursor-pointer flex-col items-center justify-center rounded-xl p-3 transition-all hover:bg-red-50"
+          >
+            <Power className="h-7 w-7 text-red-600 hover:text-red-700" />
+            <span className="mt-1 text-sm font-medium text-red-600">
+              Logout
+            </span>
+          </button>
         </motion.div>
-
       </motion.section>
     </div>
   )
@@ -144,7 +158,7 @@ const NavigationButton: React.FC<NavigationButtonProps> = ({
 }) => {
   return (
     <div
-      className="Navigation-button-container flex scale-95 flex-col items-center justify-center cursor-pointer"
+      className="Navigation-button-container flex scale-95 cursor-pointer flex-col items-center justify-center"
       onClick={onClick}
     >
       <div
@@ -171,4 +185,3 @@ const NavigationButton: React.FC<NavigationButtonProps> = ({
     </div>
   )
 }
-

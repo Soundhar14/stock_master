@@ -13,6 +13,7 @@ import CategoriesPage from './pages/MasterPages/Category/CategoryPage'
 import UsersPage from './pages/MasterPages/Users/UsersPage'
 import StockManagementPage from './pages/StockManagementPage'
 import DeliveryPage from './pages/DeliveryPage'
+import CreateDeliveryPage from './pages/delivery/CreateDeliveryPage'
 import OperationsDashboard from './pages/Dashboard'
 import InternalMovePage from './pages/InternalDelivery'
 
@@ -51,8 +52,8 @@ export default function AppRoutes() {
             />
 
             <Route
-            path={appRoutes.internalTransfer}
-            element={<InternalMovePage/>}
+              path={appRoutes.internalTransfer}
+              element={<InternalMovePage />}
             />
 
             <Route
@@ -78,6 +79,10 @@ export default function AppRoutes() {
             />
             {/* Delivery managment page */}
             <Route path={appRoutes.delivery} element={<DeliveryPage />} />
+            <Route
+              path={appRoutes.deliveryCreate}
+              element={<CreateDeliveryPage />}
+            />
           </Route>
         </Route>
 

@@ -13,5 +13,6 @@ export const appRoutes = {
   },
   stockManagement: '/stock-management',
   delivery: '/delivery',
+  deliveryCreate: '/delivery/create',
   internalTransfer: '/internal-transfer',
 }

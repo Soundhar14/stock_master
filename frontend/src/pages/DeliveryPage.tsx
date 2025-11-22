@@ -5,6 +5,7 @@ import ErrorComponent from '../components/common/Error'
 import GenericTable, { type DataCell } from '../components/common/GenericTable'
 import MasterPagesSkeleton from '../components/masterPage.components/LoadingSkeleton'
 import PageHeader from '../components/masterPage.components/PageHeader'
+import ButtonSm from '../components/common/Buttons'
 import { useFetchDeliveries } from '../queries/DeliveryQueries'
 import { appRoutes } from '../routes/appRoutes'
 import { authHandler } from '../utils/authHandler'
@@ -184,6 +185,12 @@ const DeliveryPage = () => {
       <section className="table-container flex w-full flex-col gap-4 rounded-xl bg-white p-4 shadow-sm">
         <header className="flex flex-row items-center justify-between">
           <PageHeader title="Delivery Management" />
+          <ButtonSm
+            className="text-white"
+            state="default"
+            text="New Delivery"
+            onClick={() => navigate(appRoutes.deliveryCreate)}
+          />
         </header>
       </section>
       <GenericTable

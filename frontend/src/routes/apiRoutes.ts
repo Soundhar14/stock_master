@@ -7,6 +7,6 @@ export const apiRoutes = {
   location: '/api/admin/locations',
   category: '/api/admin/categories',
   users: '/api/admin/users',
-  deliveries: '/api/inventory/deliveries',
+  deliveries: '/api/manager/deliveries',
   stock: '/api/manager/stocks',
 }

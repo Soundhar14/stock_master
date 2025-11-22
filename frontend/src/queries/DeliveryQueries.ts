@@ -1,96 +1,71 @@
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { toast } from 'react-toastify'
 
 import axiosInstance from '../utils/axios'
 import { authHandler } from '../utils/authHandler'
 import { handleApiError } from '../utils/handleApiError'
 import { apiRoutes } from '../routes/apiRoutes'
 
-import type { DeliveryOrder, DeliveryStatus } from '../types/Delivery'
-import type { Product } from '../types/Master/productTypes'
+import type {
+  CreateDeliveryPayload,
+  DeliveryApiResponse,
+  DeliveryOrder,
+  DeliveryItem,
+  DeliveryStatus,
+} from '../types/Delivery'
+import type { ProductResponse, ProductUnit } from '../types/Master/productTypes'
+import { convertToBackendDate } from '../utils/commonUtils'
 
-const shouldUseDummyDeliveries =
-  (import.meta.env.VITE_USE_DUMMY_DATA ?? 'true') !== 'false'
+const statusMap: Record<string, DeliveryStatus> = {
+  pending: 'scheduled',
+  in_transit: 'in-transit',
+  'in-transit': 'in-transit',
+  delivered: 'delivered',
+  cancelled: 'cancelled',
+}
 
-const dummyProducts: Product[] = [
-  {
-    id: 1,
-    name: 'Steel Rod 12mm',
-    sku: 'ST-ROD-12',
-    category: { id: 1, name: 'Metals' },
-    cost: 220,
-    unit: 'kg',
-  },
-  {
-    id: 2,
-    name: 'Galvanized Sheet',
-    sku: 'GV-SHEET-01',
-    category: { id: 2, name: 'Sheets' },
-    cost: 150,
-    unit: 'piece',
-  },
-]
+const defaultProduct = (productId: number): ProductResponse => ({
+  id: productId,
+  name: `Product #${productId}`,
+  sku: `SKU-${productId}`,
+  category: [{ id: 0, name: 'N/A' }],
+  cost: 0,
+  unit: 'piece',
+})
 
-const deliveryStatusLabels: DeliveryStatus[] = [
-  'scheduled',
-  'in-transit',
-  'delivered',
-]
+const normalizeStatus = (status?: string): DeliveryStatus => {
+  if (!status) return 'scheduled'
+  const normalized = status.toLowerCase()
+  return statusMap[normalized] ?? 'scheduled'
+}
 
-const dummyDeliveries: DeliveryOrder[] = [
-  {
-    id: 5001,
-    reference: 'DO-5001',
-    status: deliveryStatusLabels[0],
-    fromWarehouseId: 'WH-001',
-    fromLocationId: 'RACK-A1',
-    deliveryAddress: 'Azure Interiors Pvt Ltd, Velachery, Chennai',
-    responsibleUserId: 'USR-104',
-    scheduleDate: '2025-11-23',
-    customerName: 'Azure Interiors',
-    items: [
-      { id: 1, product: dummyProducts[0], quantity: 40, unit: 'kg' },
-      { id: 2, product: dummyProducts[1], quantity: 12, unit: 'piece' },
-    ],
-    notes: 'Handle with care. Deliver before noon.',
-    createdAt: '2025-11-20T09:00:00Z',
-    updatedAt: '2025-11-21T15:00:00Z',
-  },
-  {
-    id: 5002,
-    reference: 'DO-5002',
-    status: deliveryStatusLabels[1],
-    fromWarehouseId: 'WH-002',
-    fromLocationId: 'ZONE-02',
-    deliveryAddress: 'Sunrise Builders, Whitefield, Bangalore',
-    responsibleUserId: 'USR-204',
-    scheduleDate: '2025-11-24',
-    customerName: 'Sunrise Builders',
-    items: [{ id: 3, product: dummyProducts[0], quantity: 25, unit: 'kg' }],
-    createdAt: '2025-11-20T11:30:00Z',
-    updatedAt: '2025-11-21T10:15:00Z',
-  },
-  {
-    id: 5003,
-    reference: 'DO-5003',
-    status: deliveryStatusLabels[2],
-    fromWarehouseId: 'WH-001',
-    deliveryAddress: 'Solid Core Industries, Coimbatore',
-    responsibleUserId: 'USR-102',
-    scheduleDate: '2025-11-19',
-    customerName: 'Solid Core Industries',
-    items: [{ id: 4, product: dummyProducts[1], quantity: 60, unit: 'piece' }],
-    notes: 'Partial delivery accepted',
-    createdAt: '2025-11-15T08:45:00Z',
-    updatedAt: '2025-11-19T17:50:00Z',
-  },
-]
+const mapItems = (items: DeliveryApiResponse['items'] = []): DeliveryItem[] =>
+  items.map((item, index) => ({
+    id: item.productId ?? index,
+    product: defaultProduct(item.productId ?? index),
+    quantity: item.quantity ?? 0,
+    unit: (item.unit ?? 'piece') as ProductUnit,
+  }))
+
+const mapDeliveryResponse = (delivery: DeliveryApiResponse): DeliveryOrder => ({
+  id: delivery.id,
+  reference: delivery.reference ?? `DEL-${delivery.id}`,
+  status: normalizeStatus(delivery.status),
+  fromWarehouseId: delivery.warehouseId ? String(delivery.warehouseId) : '—',
+  fromLocationId: delivery.locationId ? String(delivery.locationId) : undefined,
+  deliveryAddress: delivery.deliveryAddress ?? '—',
+  responsibleUserId: String(delivery.responsibleUserId ?? '—'),
+  scheduleDate: convertToBackendDate(delivery.scheduledDate),
+  customerName: delivery.customerName ?? '—',
+  customerContact: delivery.customerContact,
+  items: mapItems(delivery.items),
+  notes: delivery.notes,
+  createdAt: delivery.createdAt ?? new Date().toISOString(),
+  updatedAt: delivery.updatedAt,
+})
 
 const fetchDeliveries = async (): Promise<DeliveryOrder[]> => {
   try {
-    if (shouldUseDummyDeliveries) {
-      return dummyDeliveries
-    }
-
     const token = authHandler()
 
     const res = await axiosInstance.get(apiRoutes.deliveries, {
@@ -101,7 +76,8 @@ const fetchDeliveries = async (): Promise<DeliveryOrder[]> => {
       throw new Error(res.data?.message || 'Failed to fetch deliveries')
     }
 
-    return res.data.data
+    const payload: DeliveryApiResponse[] = res.data.data ?? []
+    return payload.map(mapDeliveryResponse)
   } catch (error) {
     handleApiError(error, 'Deliveries')
     return []
@@ -115,3 +91,41 @@ export const useFetchDeliveries = () =>
     staleTime: 1000 * 60 * 5,
     retry: 1,
   })
+
+export const useCreateDelivery = () => {
+  const queryClient = useQueryClient()
+
+  const create = async (payload: CreateDeliveryPayload) => {
+    try {
+      const token = authHandler()
+      const cleanedPayload: CreateDeliveryPayload = {
+        ...payload,
+        scheduledDate: convertToBackendDate(payload.scheduledDate),
+      }
+
+      const res = await axiosInstance.post(
+        apiRoutes.deliveries,
+        cleanedPayload,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      )
+
+      if (res.status !== 201 && res.status !== 200) {
+        throw new Error(res.data?.message || 'Failed to create delivery')
+      }
+
+      return mapDeliveryResponse(res.data.data)
+    } catch (error) {
+      handleApiError(error, 'Delivery')
+    }
+  }
+
+  return useMutation({
+    mutationFn: create,
+    onSuccess: () => {
+      toast.success('Delivery created successfully')
+      queryClient.invalidateQueries({ queryKey: ['deliveries'] })
+    },
+  })
+}
