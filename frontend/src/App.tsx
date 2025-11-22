@@ -13,6 +13,7 @@ import CategoriesPage from './pages/MasterPages/Category/CategoryPage'
 import StockManagementPage from './pages/StockManagementPage'
 import DeliveryPage from './pages/DeliveryPage'
 import OperationsDashboard from './pages/Dashboard'
+import InternalMovePage from './pages/InternalDelivery'
 
 export default function AppRoutes() {
   return (
@@ -46,6 +47,11 @@ export default function AppRoutes() {
             <Route
               path={appRoutes.masterRoutes.master}
               element={<MasterPage />}
+            />
+
+            <Route
+            path={appRoutes.internalTransfer}
+            element={<InternalMovePage/>}
             />
 
             <Route

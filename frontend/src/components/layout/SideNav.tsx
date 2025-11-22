@@ -74,6 +74,14 @@ const SideNav: React.FC = () => {
               activeIconSrc="/icons/sideNavIcons/approval-icon-active.svg"
               onClick={() => navigateToRoute(appRoutes.delivery)}
             />
+            <NavigationButton
+  labelName=" Transfer"
+  isActive={isRouteActive(appRoutes.internalTransfer)}
+  iconSrc="/icons/sideNavIcons/memo-icon.svg"
+  activeIconSrc="/icons/sideNavIcons/memo-icon-active.svg"
+  onClick={() => navigateToRoute(appRoutes.internalTransfer)}
+/>
+
           </div>
         </motion.div>
       </motion.section>
