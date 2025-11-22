@@ -118,7 +118,7 @@ export const MasterPage = () => {
   ]
 
   return (
-    <div className="flex w-full max-w-[1590px] flex-col gap-8">
+    <div className="flex w-full max-w-[1590px] flex-col gap-6">
       <div className="flex items-center justify-between rounded-lg bg-white px-3 py-3 shadow-sm">
         <div className="flex flex-col">
           <PageHeader title="Master Configuration" />

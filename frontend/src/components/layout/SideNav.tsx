@@ -1,17 +1,18 @@
-import React, { useState, useCallback } from 'react'
+import React, { useState, useCallback, useEffect } from 'react'
 import { appRoutes } from '../../routes/appRoutes'
 import { motion } from 'motion/react'
 
 const SideNav: React.FC = () => {
   const [activeRoute, setActiveRoute] = useState<string>('')
 
-//  useEffect(() => {
-//   const currentPath = location.pathname
+ useEffect(() => {
+  const currentPath = location.pathname
 
-//   if (currentPath.startsWith('/master')) {
-//     setActiveRoute(appRoutes.masterRoutes.master)
-//   }
-//  }, [location.pathname])
+  if (currentPath.startsWith('/master')) {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setActiveRoute(appRoutes.masterRoutes.master)
+  }
+ }, [location.pathname])
 
   const navigateToRoute = useCallback((route: string) => {
     setActiveRoute(route)
