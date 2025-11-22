@@ -9,8 +9,6 @@ import Spinner from '../components/common/Spinner'
 import { toast } from 'react-toastify'
 import { appRoutes } from '../routes/appRoutes'
 
-
-
 export const SignInPage = () => {
   const location = useLocation()
 
@@ -40,93 +38,92 @@ export const SignInPage = () => {
   }
 
   return (
-    <div className="flex h-screen w-full">
+    <div className="flex min-h-screen w-full flex-col lg:flex-row">
       {/* Left Side - Form */}
-      <div className="flex w-full flex-col items-center justify-center px-8 md:w-1/2">
-        <div className="flex w-[400px] flex-col gap-2">
-          <div className="mb-3 text-center">
+      <div className="flex w-full flex-col items-center justify-center px-6 py-10 sm:px-10 lg:w-1/2">
+        <div className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-sm flex flex-col gap-4">
+          <div className="mb-2 text-center lg:text-left">
             <img
               src="./icons/logo-icon.svg"
               alt="Payroll Logo"
-              className="mb-4 h-24 w-24"
+              className="mx-auto mb-3 h-20 w-20 sm:h-24 sm:w-24 lg:mx-0"
             />
-            <p className="text-md text-start font-medium text-gray-500">
-              Please sign in!
-            </p>
-            <h2 className="head mt-1 text-start text-2xl font-medium">
+            <p className="text-sm text-gray-500 lg:text-base">Please sign in!</p>
+            <h2 className="mt-1 text-xl font-semibold text-gray-700 sm:text-2xl">
               Welcome to Payroll
             </h2>
           </div>
 
-          <div>
-            <form
-              className="flex w-full max-w-sm flex-col gap-3"
-              onSubmit={handleSubmit}
-            >
-              <Input
-                type="str"
-                name="email"
-                placeholder="Enter your username or email"
-                title="Email"
-                inputValue={username}
-                onChange={setUsername}
-              />
+          <form
+            className="flex w-full flex-col gap-4"
+            onSubmit={handleSubmit}
+          >
+            {/* Username */}
+            <Input
+              type="str"
+              name="email"
+              placeholder="Enter your username or email"
+              title="Email"
+              inputValue={username}
+              onChange={setUsername}
+            />
 
-              <div className="relative w-full min-w-[180px] self-stretch">
-                <h3 className="mb-0.5 w-full justify-start text-xs leading-loose font-semibold text-slate-700">
-                  Password
-                </h3>
-                <div className="parent-input-wrapper flex cursor-text items-center justify-between overflow-clip rounded-xl border-2 border-slate-300 bg-white px-3 py-2.5 transition-all autofill:bg-blue-500 focus-within:border-slate-500">
-                  <input
-                    name="password"
-                    type={showPassword ? 'text' : 'password'}
-                    placeholder="Enter your password"
-                    value={password}
-                    autoComplete="current-password"
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="w-full bg-transparent text-sm font-medium text-slate-600 placeholder:text-slate-400 focus:outline-none"
+            {/* Password */}
+            <div className="relative w-full">
+              <h3 className="mb-1 text-xs font-semibold text-slate-700">Password</h3>
+              <div className="parent-input-wrapper flex items-center justify-between overflow-clip rounded-xl border-2 border-slate-300 bg-white px-3 py-2.5 focus-within:border-slate-500">
+                <input
+                  name="password"
+                  type={showPassword ? 'text' : 'password'}
+                  placeholder="Enter your password"
+                  value={password}
+                  autoComplete="current-password"
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full bg-transparent text-sm font-medium text-slate-600 placeholder:text-slate-400 focus:outline-none"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((prev) => !prev)}
+                  className="ml-2 text-slate-500 hover:text-blue-600 active:scale-95"
+                >
+                  <img
+                    src={
+                      showPassword
+                        ? '/icons/eye-icon.svg'
+                        : '/icons/eye-off-icon.svg'
+                    }
+                    alt={showPassword ? 'Hide Password' : 'Show Password'}
+                    className="h-6 w-6"
                   />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword((prev) => !prev)}
-                    className="ml-2 cursor-pointer text-slate-500 transition-transform hover:text-blue-600 focus:outline-none active:scale-95"
-                  >
-                    <img
-                      src={
-                        showPassword
-                          ? '/icons/eye-off-icon.svg'
-                          : '/icons/eye-icon.svg'
-                      }
-                      alt={showPassword ? 'Hide Password' : 'Show Password'}
-                      className="h-6 w-6"
-                    />
-                  </button>
-                </div>
+                </button>
               </div>
+            </div>
 
-              <ButtonSm
-                state="default"
-                type="submit"
-                className="w-full rounded-[16px] bg-blue-500 px-3.5 py-3 text-sm font-medium text-white transition hover:bg-blue-700 disabled:opacity-40"
-                disabled={isPending || !username || !password}
-              >
-                <span className="flex w-full flex-row items-center justify-center gap-1.5 self-center text-center">
-                  {isPending && <Spinner size="sm" className="text-white" />}
-                  Sign In
-                </span>
-              </ButtonSm>
-            </form>
-          </div>
+         {/* Submit Button */}
+<ButtonSm
+  state="default"
+  type="submit"
+  className="w-full flex items-center justify-center rounded-2xl bg-blue-500 px-3.5 py-3 text-sm font-medium text-white text-center transition hover:bg-blue-700 disabled:opacity-40"
+  disabled={isPending || !username || !password}
+>
+  <span className="flex items-center justify-center gap-2">
+    {isPending && <Spinner size="sm" className="text-white" />}
+    Sign In
+  </span>
+</ButtonSm>
+
+          </form>
         </div>
       </div>
 
-      {/* Right Side */}
-      <div className="bg-primary relative hidden w-1/2 items-center justify-center lg:flex">
-        <div className="texts absolute top-1/2 left-1/2 z-50 -translate-x-1/2 -translate-y-1/2 text-[60px] leading-[60px] font-medium text-[#00b3fa] mix-blend-difference xl:text-[80px] xl:leading-[80px]">
+      {/* Right Side - Hidden on Mobile */}
+      <div className="relative hidden w-full items-center justify-center lg:flex lg:w-1/2">
+        <div className="absolute z-20 text-[40px] leading-[45px] font-medium text-[#00b3fa] mix-blend-difference md:text-[55px] md:leading-[55px] xl:text-[80px] xl:leading-20">
           Reliable <br /> Fast <br /> Smart.
         </div>
+
         <img
-          src="./images/sign-in-image.webp"
+          src="./Images/sign-in-image.webp"
           alt="Login art"
           className="absolute inset-0 h-full w-full object-cover opacity-90"
         />
@@ -134,5 +131,3 @@ export const SignInPage = () => {
     </div>
   )
 }
-
-
