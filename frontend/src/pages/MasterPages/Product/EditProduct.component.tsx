@@ -6,10 +6,10 @@ import type { FormState } from '../../../types/appTypes'
 import {
   useCreateProduct,
   useEditProduct,
-} from '../../../queries/Product/productQueries'
+} from '../../../queries/Master/productQueries'
 import DropdownSelect from "../../../components/common/DropDown";
 import type { DropdownOption } from "../../../components/common/DropDown";
-import type { Product, ProductCategory, ProductUnit } from '../../../types/Product/productTypes'
+import type { Product, ProductCategory, ProductUnit } from '../../../types/Master/productTypes'
 
 const units: ProductUnit[] = [
   'kg',

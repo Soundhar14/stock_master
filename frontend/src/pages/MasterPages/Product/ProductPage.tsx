@@ -13,7 +13,7 @@ import ErrorComponent from '../../../components/common/Error'
 
 import { appRoutes } from '../../../routes/appRoutes'
 import type { FormState } from '../../../types/appTypes'
-import type { Product } from '../../../types/Product/productTypes'
+import type { Product } from '../../../types/Master/productTypes'
 
 import GenericTable, {
   type DataCell,

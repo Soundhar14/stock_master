@@ -6,7 +6,7 @@ import { apiRoutes } from '../../routes/apiRoutes'
 import { authHandler } from '../../utils/authHandler'
 import { handleApiError } from '../../utils/handleApiError'
 
-import type { Product } from '../../types/Product/productTypes'
+import type { Product } from '../../types/Master/productTypes'
 
 /* -------------------------------
    🔍 Fetch All Products

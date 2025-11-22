@@ -1,6 +1,6 @@
 import ButtonSm from "../../../components/common/Buttons";
 import { useDeleteProduct } from "../../../queries/Product/productQueries";
-import type { Product } from "../../../types/Product/productTypes";
+import type { Product } from "../../../types/Master/productTypes";
 
 export const DeleteProductDialogBox = ({
   setIsDeleteProductDialogOpen,
