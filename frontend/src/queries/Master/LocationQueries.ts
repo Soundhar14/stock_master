@@ -5,7 +5,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { apiRoutes } from "../../routes/apiRoutes";
 import type { DropdownOption } from "../../components/common/DropDown";
-import type { Location } from "../../types/Master";
+import type { Location } from "../../types/Master/Location";
 import { authHandler } from "../../utils/authHandler";
 import { handleApiError } from "../../utils/handleApiError";
 

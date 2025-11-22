@@ -1,5 +1,5 @@
 import ButtonSm from "../../../components/common/Buttons";
-import { useDeleteWarehouse } from "../../../queries/Master/Warehouse";
+import { useDeleteWarehouse } from "../../../queries/Master/WarehouseQueries";
 import type { FormState } from "../../../types/appTypes";
 import type { Warehouse } from "../../../types/Master/Warehouse";
 

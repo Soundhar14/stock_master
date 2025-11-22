@@ -1,4 +1,4 @@
-import { data, useNavigate } from 'react-router-dom'
+import {  useNavigate } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import { AnimatePresence } from 'motion/react'
 
@@ -7,9 +7,7 @@ import PageHeader from '../../../components/masterPage.components/PageHeader'
 import DialogBox from '../../../components/common/DialogBox'
 import { DeleteProductDialogBox } from './DeleteProductDialogBox'
 
-import { useFetchProducts } from '../../../queries/Product/productQueries'
-import MasterPagesSkeleton from '../../../components/masterPage.components/LoadingSkeleton'
-import ErrorComponent from '../../../components/common/Error'
+
 
 import { appRoutes } from '../../../routes/appRoutes'
 import type { FormState } from '../../../types/appTypes'

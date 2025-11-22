@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Input from "../../../components/common/Input";
 import ButtonSm from "../../../components/common/Buttons";
-import { useCreateWarehouse, useEditWarehouse } from "../../../queries/Master/Warehouse";
+import { useCreateWarehouse, useEditWarehouse } from "../../../queries/Master/WarehouseQueries";
 import type { FormState } from "../../../types/appTypes";
 import type { Warehouse } from "../../../types/Master/Warehouse";
 

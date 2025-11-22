@@ -9,7 +9,7 @@ import GenericTable, {
 } from "../../../components/common/GenericTable";
 import ErrorComponent from "../../../components/common/Error";
 import MasterPagesSkeleton from "../../../components/masterPage.components/LoadingSkeleton";
-import { useFetchWarehouses } from "../../../queries/Master/Warehouse";
+import { useFetchWarehouses } from "../../../queries/Master/WarehouseQueries";
 import { appRoutes } from "../../../routes/appRoutes";
 import type { Warehouse } from "../../../types/Master/Warehouse";
 import { authHandler } from "../../../utils/authHandler";

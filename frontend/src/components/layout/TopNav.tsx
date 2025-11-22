@@ -1,6 +1,5 @@
 import { motion } from 'framer-motion'
 import React from 'react'
-import NotificationCenter from '../common/NotificationCenter'
 import ProfileMenu from '../common/ProfileMenu'
 
 interface TopNavProps {
@@ -73,7 +72,7 @@ export const TopNav: React.FC<TopNavProps> = ({ userName, formattedDate }) => {
           transition={{ delay: 0.2 }}
           className="flex scale-90 items-center gap-5"
         >
-          <NotificationCenter notifications={2} />
+         
 
           {/* Profile Image */}
           <ProfileMenu />
