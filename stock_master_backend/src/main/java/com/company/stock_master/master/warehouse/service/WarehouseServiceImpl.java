@@ -7,39 +7,26 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import com.company.stock_master.master.location.*;
-import com.company.stock_master.master.warehouse.Warehouse;
 import com.company.stock_master.master.warehouse.WarehouseRepository;
-import com.company.stock_master.master.warehouse.dto.*;
+import com.company.stock_master.master.warehouse.entity.Location;
+import com.company.stock_master.master.warehouse.entity.Warehouse;
+import com.company.stock_master.master.warehouse.dto.WarehouseRequest;
+import com.company.stock_master.master.warehouse.dto.WarehouseResponse;
 
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-
 public class WarehouseServiceImpl implements WarehouseService {
 
     private final WarehouseRepository warehouseRepository;
-    private final LocationRepository locationRepository;
 
     @Override
     public WarehouseResponse createWarehouse(WarehouseRequest request) {
+        // Validate unique shortCode and name for create
+        validateUniqueFields(request.getShortCode(), request.getName());
 
-        if (warehouseRepository.existsByShortCode(request.getShortCode())) {
-            throw new DuplicateWarehouseException("Warehouse shortCode already exists.");
-        }
-
-        if (warehouseRepository.existsByName(request.getName())) {
-            throw new DuplicateWarehouseException("Warehouse name already exists.");
-        }
-
-        List<Location> locations = null;
-        if (request.getLocationIds() != null && !request.getLocationIds().isEmpty()) {
-            locations = locationRepository.findAllById(request.getLocationIds());
-            if (locations.size() != request.getLocationIds().size()) {
-                throw new EntityNotFoundException("One or more locations not found");
-            }
-        }
+        List<Location> locations = mapRequestLocations(request);
 
         Warehouse warehouse = Warehouse.builder()
                 .shortCode(request.getShortCode())
@@ -51,8 +38,7 @@ public class WarehouseServiceImpl implements WarehouseService {
                 .build();
 
         warehouse = warehouseRepository.save(warehouse);
-
-        return MapToResponse(warehouse);
+        return mapToResponse(warehouse);
     }
 
     @Override
@@ -60,37 +46,38 @@ public class WarehouseServiceImpl implements WarehouseService {
         Warehouse warehouse = warehouseRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Warehouse not found"));
 
-        if (request.getShortCode() != null) {
-            if (!request.getShortCode().equalsIgnoreCase(warehouse.getShortCode())
-                    && warehouseRepository.existsByShortCode(request.getShortCode())) {
-                throw new DuplicateWarehouseException("Warehouse short code already exists.");
-            }
+        // Validate unique fields for patch
+        validateUniqueFields(request, warehouse);
+
+        if (request.getShortCode() != null)
             warehouse.setShortCode(request.getShortCode());
-        }
-
-        if (request.getName() != null) {
-            if (!request.getName().equalsIgnoreCase(warehouse.getName())
-                    && warehouseRepository.existsByName(request.getName())) {
-                throw new DuplicateWarehouseException("Warehouse name already exists.");
-            }
+        if (request.getName() != null)
             warehouse.setName(request.getName());
-        }
-
-        if (request.getAddress() != null) {
+        if (request.getAddress() != null)
             warehouse.setAddress(request.getAddress());
-        }
-
-        if (request.getCity() != null) {
+        if (request.getCity() != null)
             warehouse.setCity(request.getCity());
-        }
 
-        if (request.getLocationIds() != null && !request.getLocationIds().isEmpty()) {
-            List<Location> locations = locationRepository.findAllById(request.getLocationIds());
-            warehouse.setLocations(locations);
+        if (request.getLocations() != null) {
+            List<Location> updatedLocations = request.getLocations().stream()
+                    .map(locReq -> {
+                        // Try to find existing location in warehouse
+                        Location existing = warehouse.getLocations().stream()
+                                .filter(l -> l.getId() != null && l.getId().equals(locReq.getId()))
+                                .findFirst()
+                                .orElse(new Location()); // create new if not exists
+
+                        existing.setName(locReq.getName());
+                        return existing;
+                    })
+                    .toList();
+
+            warehouse.getLocations().clear();
+            warehouse.getLocations().addAll(updatedLocations);
         }
 
         Warehouse updated = warehouseRepository.save(warehouse);
-        return MapToResponse(updated);
+        return mapToResponse(updated);
     }
 
     @Override
@@ -98,14 +85,15 @@ public class WarehouseServiceImpl implements WarehouseService {
         Warehouse warehouse = warehouseRepository.findById(id)
                 .filter(Warehouse::isActive)
                 .orElseThrow(() -> new EntityNotFoundException("Warehouse not found with id: " + id));
-        return MapToResponse(warehouse);
+
+        return mapToResponse(warehouse);
     }
 
     @Override
     public List<WarehouseResponse> getAll() {
         return warehouseRepository.findAll().stream()
                 .filter(Warehouse::isActive)
-                .map(this::MapToResponse)
+                .map(this::mapToResponse)
                 .collect(Collectors.toList());
     }
 
@@ -118,23 +106,66 @@ public class WarehouseServiceImpl implements WarehouseService {
         warehouseRepository.save(warehouse);
     }
 
-    private WarehouseResponse MapToResponse(Warehouse warehouse) {
-        WarehouseResponse response = new WarehouseResponse();
-        response.setId(warehouse.getId());
-        response.setShortCode(warehouse.getShortCode());
-        response.setName(warehouse.getName());
-        response.setAddress(warehouse.getAddress());
-        response.setCity(warehouse.getCity());
+    // ----------------- PRIVATE METHODS -----------------
 
-        response.setLocations(warehouse.getLocations() != null
-                ? warehouse.getLocations().stream()
-                        .map(loc -> new WarehouseResponse.LocationResponseDTO(loc.getId(), loc.getName()))
-                        .toList()
-                : List.of());
-
-        return response;
+    // Validate unique fields for CREATE
+    private void validateUniqueFields(String shortCode, String name) {
+        if (shortCode != null && warehouseRepository.existsByShortCode(shortCode)) {
+            throw new DuplicateWarehouseException("Warehouse shortCode already exists.");
+        }
+        if (name != null && warehouseRepository.existsByName(name)) {
+            throw new DuplicateWarehouseException("Warehouse name already exists.");
+        }
     }
 
+    // Validate unique fields for PATCH
+    private void validateUniqueFields(WarehouseRequest request, Warehouse existing) {
+        if (request.getShortCode() != null &&
+                !request.getShortCode().equalsIgnoreCase(existing.getShortCode()) &&
+                warehouseRepository.existsByShortCodeAndIdNot(request.getShortCode(), existing.getId())) {
+            throw new DuplicateWarehouseException("Warehouse shortCode already exists.");
+        }
+
+        if (request.getName() != null &&
+                !request.getName().equalsIgnoreCase(existing.getName()) &&
+                warehouseRepository.existsByNameAndIdNot(request.getName(), existing.getId())) {
+            throw new DuplicateWarehouseException("Warehouse name already exists.");
+        }
+    }
+
+    private List<Location> mapRequestLocations(WarehouseRequest request) {
+        if (request.getLocations() == null || request.getLocations().isEmpty()) {
+            return List.of();
+        }
+
+        return request.getLocations().stream()
+                .map(loc -> Location.builder()
+                        .id(loc.getId())
+                        .name(loc.getName())
+                        .build())
+                .collect(Collectors.toList());
+    }
+
+    private WarehouseResponse mapToResponse(Warehouse warehouse) {
+        List<WarehouseResponse.LocationResponseDTO> locationDTOs = warehouse.getLocations() != null
+                ? warehouse.getLocations().stream()
+                        .map(loc -> new WarehouseResponse.LocationResponseDTO(
+                                loc.getId(),
+                                loc.getName()))
+                        .collect(Collectors.toList())
+                : List.of();
+
+        return WarehouseResponse.builder()
+                .id(warehouse.getId())
+                .shortCode(warehouse.getShortCode())
+                .name(warehouse.getName())
+                .address(warehouse.getAddress())
+                .city(warehouse.getCity())
+                .locations(locationDTOs)
+                .build();
+    }
+
+    // ----------------- EXCEPTIONS -----------------
     @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
     public static class DuplicateWarehouseException extends RuntimeException {
         public DuplicateWarehouseException(String message) {
@@ -143,10 +174,9 @@ public class WarehouseServiceImpl implements WarehouseService {
     }
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public class EntityNotFoundException extends RuntimeException {
+    public static class EntityNotFoundException extends RuntimeException {
         public EntityNotFoundException(String message) {
             super(message);
         }
     }
-
 }

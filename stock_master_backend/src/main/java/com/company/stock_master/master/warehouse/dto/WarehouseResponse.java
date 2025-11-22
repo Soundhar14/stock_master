@@ -1,16 +1,14 @@
 package com.company.stock_master.master.warehouse.dto;
 
-import java.util.List;
-
 import lombok.*;
+import java.util.List;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-
 public class WarehouseResponse {
-    
+
     private long id;
     private String shortCode;
     private String name;
@@ -26,5 +24,4 @@ public class WarehouseResponse {
         private Long id;
         private String name;
     }
-
 }
