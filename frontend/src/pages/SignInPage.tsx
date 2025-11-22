@@ -13,7 +13,7 @@ export const SignInPage = () => {
   const location = useLocation()
 
   const [showPassword, setShowPassword] = useState(false)
-  const [username, setUsername] = useState('')
+  const [email, setemail] = useState('')
   const [password, setPassword] = useState('')
   const navigate = useNavigate()
 
@@ -30,11 +30,11 @@ export const SignInPage = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
 
-    if (!username.trim() || !password.trim()) {
+    if (!email.trim() || !password.trim()) {
       return toast.error('Username and password are required')
     }
 
-    mutate({ username, password })
+    mutate({ email, password })
   }
 
   return (
@@ -64,8 +64,8 @@ export const SignInPage = () => {
               name="email"
               placeholder="Enter your username or email"
               title="Email"
-              inputValue={username}
-              onChange={setUsername}
+              inputValue={email}
+              onChange={setemail}
             />
 
             {/* Password */}
@@ -104,7 +104,7 @@ export const SignInPage = () => {
   state="default"
   type="submit"
   className="w-full flex items-center justify-center rounded-2xl bg-blue-500 px-3.5 py-3 text-sm font-medium text-white text-center transition hover:bg-blue-700 disabled:opacity-40"
-  disabled={isPending || !username || !password}
+  disabled={isPending || !email || !password}
 >
   <span className="flex items-center justify-center gap-2">
     {isPending && <Spinner size="sm" className="text-white" />}

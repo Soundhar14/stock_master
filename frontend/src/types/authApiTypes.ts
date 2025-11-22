@@ -1,6 +1,6 @@
 // Authentication types
 export interface signInRequestType {
-  username: string;
+  email: string;
   password: string;
 }
 
