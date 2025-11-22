@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import  { useState } from 'react';
 import { Package, Truck, Clock, CheckCircle2, TrendingUp, AlertCircle } from 'lucide-react';
 
 export default function OperationsDashboard() {
@@ -77,7 +77,7 @@ export default function OperationsDashboard() {
           {/* Receipt Card */}
           <div className="bg-white rounded-2xl shadow-md border border-gray-200 overflow-hidden hover:shadow-xl transition-all duration-300">
             {/* Card Header */}
-            <div className="bg-gradient-to-r from-blue-500 to-blue-600 px-8 py-6">
+            <div className="bg-blue-500 px-8 py-6">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
                   <div className="bg-white/20 backdrop-blur-sm p-3 rounded-xl">
@@ -104,8 +104,8 @@ export default function OperationsDashboard() {
               </button>
 
               {/* Status Grid */}
-              <div className="flex flex-col gap-3">
-                <div className="bg-gradient-to-r from-orange-50 to-orange-100/50 rounded-xl p-5 border border-orange-200">
+              <div className="grid grid-cols-3 gap-2">
+                <div className="bg-linear-to-r from-orange-50 to-orange-100/50 rounded-xl p-5 border border-orange-200">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <div className="bg-orange-500 p-2 rounded-lg">
@@ -119,7 +119,7 @@ export default function OperationsDashboard() {
                     <span className="text-3xl font-bold text-orange-600">{receiptData.late}</span>
                   </div>
                 </div>
-  <div className="bg-gradient-to-r from-yellow-50 to-yellow-100/50 rounded-xl p-5 border border-yellow-200">
+  <div className="bg-linear-to-r from-yellow-50 to-yellow-100/50 rounded-xl p-5 border border-yellow-200">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <div className="bg-yellow-500 p-2 rounded-lg">
@@ -133,7 +133,7 @@ export default function OperationsDashboard() {
                     <span className="text-3xl font-bold text-yellow-600">{receiptData.waiting}</span>
                   </div>
                 </div>
-                <div className="bg-gradient-to-r from-blue-50 to-blue-100/50 rounded-xl p-5 border border-blue-200">
+                <div className="bg-linear-to-r from-blue-50 to-blue-100/50 rounded-xl p-5 border border-blue-200">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <div className="bg-blue-500 p-2 rounded-lg">
@@ -156,7 +156,7 @@ export default function OperationsDashboard() {
                   <span className="text-gray-900 font-semibold">60%</span>
                 </div>
                 <div className="w-full bg-gray-200 rounded-full h-2.5 overflow-hidden">
-                  <div className="bg-gradient-to-r from-blue-500 to-blue-600 h-2.5 rounded-full" style={{width: '60%'}}></div>
+                  <div className="bg-blue-500 h-2.5 rounded-full" style={{width: '60%'}}></div>
                 </div>
               </div>
             </div>
@@ -165,7 +165,7 @@ export default function OperationsDashboard() {
           {/* Delivery Card */}
           <div className="bg-white rounded-2xl shadow-md border border-gray-200 overflow-hidden hover:shadow-xl transition-all duration-300">
             {/* Card Header */}
-            <div className="bg-gradient-to-r from-blue-600 to-blue-700 px-8 py-6">
+            <div className="bg-blue-500 px-8 py-6">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
                   <div className="bg-white/20 backdrop-blur-sm p-3 rounded-xl">
@@ -192,8 +192,8 @@ export default function OperationsDashboard() {
               </button>
 
               {/* Status Grid */}
-              <div className="flex flex-col gap-3">
-                <div className="bg-gradient-to-r from-orange-50 to-orange-100/50 rounded-xl p-5 border border-orange-200">
+              <div className="grid grid-cols-3 gap-2">
+                <div className="bg-linear-to-r from-orange-50 to-orange-100/50 rounded-xl p-5 border border-orange-200">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <div className="bg-orange-500 p-2 rounded-lg">
@@ -208,7 +208,7 @@ export default function OperationsDashboard() {
                   </div>
                 </div>
 
-                <div className="bg-gradient-to-r from-yellow-50 to-yellow-100/50 rounded-xl p-5 border border-yellow-200">
+                <div className="bg-linear-to-r from-yellow-50 to-yellow-100/50 rounded-xl p-5 border border-yellow-200">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <div className="bg-yellow-500 p-2 rounded-lg">
@@ -223,7 +223,7 @@ export default function OperationsDashboard() {
                   </div>
                 </div>
 
-                <div className="bg-gradient-to-r from-blue-50 to-blue-100/50 rounded-xl p-5 border border-blue-200">
+                <div className="bg-linear-to-r from-blue-50 to-blue-100/50 rounded-xl p-5 border border-blue-200">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <div className="bg-blue-500 p-2 rounded-lg">
@@ -246,7 +246,7 @@ export default function OperationsDashboard() {
                   <span className="text-gray-900 font-semibold">67%</span>
                 </div>
                 <div className="w-full bg-gray-200 rounded-full h-2.5 overflow-hidden">
-                  <div className="bg-gradient-to-r from-blue-600 to-blue-700 h-2.5 rounded-full" style={{width: '67%'}}></div>
+                  <div className="bg-linear-to-r from-blue-600 to-blue-700 h-2.5 rounded-full" style={{width: '67%'}}></div>
                 </div>
               </div>
             </div>
