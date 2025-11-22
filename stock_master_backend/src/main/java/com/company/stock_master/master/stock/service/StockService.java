@@ -17,6 +17,8 @@ public interface StockService {
 
     public void deleteById(Long id);
 
-    public void reduceStock(Long warehouseId, Long locationId, Long productId, long qty);
+    public void reduceStock(Long warehouseId, Long locationId, Long productId, long quantity);
+
+    public void addStock(Long warehouseId, Long locationId, Long productId, long quantity);
     
 }

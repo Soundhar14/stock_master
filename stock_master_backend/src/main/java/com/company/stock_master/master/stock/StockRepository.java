@@ -6,9 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface StockRepository extends JpaRepository<Stock, Long> {
 
-    Optional<Stock> findByWarehouseIdAndLocationIdAndProductId(
-            Long warehouseId,
-            Long locationId,
-            Long productId);
+    Optional<Stock> findByProductIdAndWarehouseIdAndLocationId(Long productId, Long warehouseId, Long locationId);
 
 }

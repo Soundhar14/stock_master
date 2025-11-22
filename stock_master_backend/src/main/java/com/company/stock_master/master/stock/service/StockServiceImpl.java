@@ -128,18 +128,29 @@ public class StockServiceImpl implements StockService {
         }
 
         @Override
-        public void reduceStock(Long warehouseId, Long locationId, Long productId, long qty) {
-
+        public void addStock(Long warehouseId, Long locationId, Long productId, long quantity) {
                 Stock stock = stockRepository
-                                .findByWarehouseIdAndLocationIdAndProductId(warehouseId, locationId, productId)
-                                .orElseThrow(() -> new RuntimeException("Stock not found"));
+                                .findByProductIdAndWarehouseIdAndLocationId(productId, warehouseId, locationId)
+                                .orElseThrow(() -> new EntityNotFoundException("Stock not found"));
 
-                if (stock.getFreeToUse() < qty) {
-                        throw new RuntimeException("Not enough stock to deliver!");
+                stock.setOnHand(stock.getOnHand() + quantity);
+                stock.setFreeToUse(stock.getFreeToUse() + quantity);
+
+                stockRepository.save(stock);
+        }
+
+        @Override
+        public void reduceStock(Long warehouseId, Long locationId, Long productId, long quantity) {
+                Stock stock = stockRepository
+                                .findByProductIdAndWarehouseIdAndLocationId(productId, warehouseId, locationId)
+                                .orElseThrow(() -> new EntityNotFoundException("Stock not found"));
+
+                if (stock.getFreeToUse() < quantity) {
+                        throw new RuntimeException("Insufficient stock to reduce");
                 }
 
-                stock.setOnHand(stock.getOnHand() - qty);
-                stock.setFreeToUse(stock.getFreeToUse() - qty);
+                stock.setOnHand(stock.getOnHand() - quantity);
+                stock.setFreeToUse(stock.getFreeToUse() - quantity);
 
                 stockRepository.save(stock);
         }
