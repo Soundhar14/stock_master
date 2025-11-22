@@ -1,76 +1,88 @@
-import { useNavigate } from 'react-router-dom'
-import BranchEdit from './EditWarehouse.component'
-import PageHeader from '../../../components/masterPage.components/PageHeader'
-import { AnimatePresence } from 'motion/react'
-import { useEffect, useState } from 'react'
-import DialogBox from '../../../components/common/DialogBox'
-import { DeleteBranchDialogBox } from './DeleteWarehouseDialogBox'
-import { useFetchBranches } from '../../../queries/masterQueries/BranchQuery'
-import MasterPagesSkeleton from '../../../components/masterPage.components/LoadingSkeleton'
-import ErrorComponent from '../../../components/common/Error'
-import { appRoutes } from '../../../routes/appRoutes'
-import type { FormState } from '../../../types/appTypes'
-import type { BranchDetails } from '../../../types/masterApiTypes'
-
-// ✅ import new GenericTableMaster
+import { useNavigate } from "react-router-dom";
+import WarehouseEdit from "./EditWarehouse.component";
+import PageHeader from "../../../components/masterPage.components/PageHeader";
+import { AnimatePresence } from "motion/react";
+import { useEffect, useState } from "react";
+import DialogBox from "../../../components/common/DialogBox";
 import GenericTable, {
   type DataCell,
-} from '../../../components/common/GenericTable'
+} from "../../../components/common/GenericTable";
+import ErrorComponent from "../../../components/common/Error";
+import MasterPagesSkeleton from "../../../components/masterPage.components/LoadingSkeleton";
+import { useFetchWarehouses } from "../../../queries/Master/Warehouse";
+import { appRoutes } from "../../../routes/appRoutes";
+import type { Warehouse } from "../../../types/Master/Warehouse";
+import { authHandler } from "../../../utils/authHandler";
+import type { FormState } from "../../../types/appTypes";
 
-const BranchesPage = () => {
-  const navigate = useNavigate()
+const WarehousesPage = () => {
+  const navigate = useNavigate();
 
+  // Redirect if token missing
   useEffect(() => {
-    const token = authHandler()
-    if (!token) {
-      navigate(appRoutes.signIn)
-    }
-  }, [navigate])
+    const token = authHandler();
+    if (!token) navigate(appRoutes.signIn);
+  }, [navigate]);
 
-  const [isDeleteBranchDialogOpen, setIsDeleteBranchDialogOpen] =
-    useState(false)
-  const [branch, setBranch] = useState<BranchDetails | null>(null)
-  const [formState, setFormState] = useState<FormState>('create')
+  // Dialog + Form State
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [warehouse, setWarehouse] = useState<Warehouse | null>(null);
+  const [formState, setFormState] = useState<FormState>("create");
 
-  const { data: branches, isLoading, isError } = useFetchBranches()
+  // Fetch warehouses
+  const { data: warehouses, isLoading, isError } = useFetchWarehouses();
 
-  const handleBranchDeleted = () => {
-    setBranch(null)
-    setFormState('create')
-  }
+  const handleWarehouseDeleted = () => {
+    setWarehouse(null);
+    setFormState("create");
+  };
 
-  if (isLoading) return <MasterPagesSkeleton />
-  if (isError) return <ErrorComponent />
+  if (isLoading) return <MasterPagesSkeleton />;
+  if (isError) return <ErrorComponent />;
 
-  // ✅ Define columns for GenericTable
+  // Table Columns for Warehouses
   const dataCell: DataCell[] = [
     {
-      headingTitle: 'Name',
-      accessVar: 'name',
+      headingTitle: "Short Code",
+      accessVar: "shortCode",
       searchable: true,
       sortable: true,
-      className: 'min-w-[150px] max-w-[200px]',
+      className: "min-w-[120px] max-w-[160px]",
     },
     {
-      headingTitle: 'Address',
-      accessVar: 'addressLine1',
+      headingTitle: "Name",
+      accessVar: "name",
       searchable: true,
       sortable: true,
-      className: 'min-w-[200px] max-w-[300px]',
+      className: "min-w-[150px] max-w-[200px]",
     },
-  ]
+    {
+      headingTitle: "City",
+      accessVar: "city",
+      searchable: true,
+      sortable: true,
+      className: "min-w-[120px] max-w-[160px]",
+    },
+    {
+      headingTitle: "Address",
+      accessVar: "address",
+      searchable: true,
+      sortable: true,
+      className: "min-w-[200px] max-w-[300px]",
+    },
+  ];
 
   return (
     <main className="flex h-max w-full max-w-full flex-col gap-4 md:flex-row">
       <AnimatePresence>
-        {isDeleteBranchDialogOpen && (
-          <DialogBox setToggleDialogueBox={setIsDeleteBranchDialogOpen}>
-            <DeleteBranchDialogBox
-              setBranch={setBranch}
+        {isDeleteDialogOpen && (
+          <DialogBox setToggleDialogueBox={setIsDeleteDialogOpen}>
+            <DeleteWarehouseDialogBox
+              setWarehouse={setWarehouse}
               setFormState={setFormState}
-              setIsDeleteBranchDialogOpen={setIsDeleteBranchDialogOpen}
-              branch={branch!}
-              onDeleted={handleBranchDeleted}
+              setIsDeleteDialogOpen={setIsDeleteDialogOpen}
+              warehouse={warehouse!}
+              onDeleted={handleWarehouseDeleted}
             />
           </DialogBox>
         )}
@@ -79,41 +91,42 @@ const BranchesPage = () => {
       {/* Left side table */}
       <section className="table-container flex w-full flex-col gap-3 rounded-[12px] md:w-[50%]">
         <header className="flex flex-row items-center justify-between rounded-2xl bg-white p-4 shadow-sm">
-          <PageHeader title="Branch Configuration" />
+          <PageHeader title="Warehouse Configuration" />
         </header>
+
         <GenericTable
           isMasterTable
-          data={branches ?? []} // ensures [] is passed if undefined
+          data={warehouses ?? []}
           dataCell={dataCell}
           isLoading={isLoading}
           onEdit={(row) => {
-            setFormState('edit')
-            setBranch(row)
+            setFormState("edit");
+            setWarehouse(row);
           }}
           onDelete={(row) => {
-            setBranch(row)
-            setIsDeleteBranchDialogOpen(true)
+            setWarehouse(row);
+            setIsDeleteDialogOpen(true);
           }}
           onView={(row) => {
-            setFormState('display')
-            setBranch(row)
+            setFormState("display");
+            setWarehouse(row);
           }}
           rowKey={(row) => row.id}
-          tableTitle="Branch Configuration"
+          tableTitle="Warehouse Configuration"
         />
       </section>
 
       {/* Right side form */}
       <section className="table-container max-h-full w-full flex-col gap-3 rounded-[12px] bg-white/80 p-4 shadow-sm md:w-[50%]">
-        <BranchEdit
-          branchDetails={branch}
+        <WarehouseEdit
+          warehouseDetails={warehouse}
           formState={formState}
           setFormState={setFormState}
-          setBranchData={setBranch}
+          setWarehouseData={setWarehouse}
         />
       </section>
     </main>
-  )
-}
+  );
+};
 
-export default BranchesPage
+export default WarehousesPage;
