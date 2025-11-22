@@ -1,9 +1,9 @@
-import type { Product } from './Master/productTypes'
+import type { ProductResponse } from './Master/productTypes'
 import type { Location, Warehouse } from './Master/Warehouse'
 
 export interface Stock {
   id: number
-  product: Product
+  product: ProductResponse
   warehouse: Warehouse
   location: Location
   onHand: number

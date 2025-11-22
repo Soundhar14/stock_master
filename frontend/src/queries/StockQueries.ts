@@ -7,18 +7,19 @@ import { handleApiError } from '../utils/handleApiError'
 import { apiRoutes } from '../routes/apiRoutes'
 
 import type { Stock } from '../types/Stock'
-import type { Product } from '../types/Master/productTypes'
+
 import type { Warehouse } from '../types/Master/Warehouse'
+import type { ProductResponse } from '../types/Master/productTypes'
 
 const shouldUseDummyStock =
   (import.meta.env.VITE_USE_DUMMY_DATA ?? 'true') !== 'false'
 
-const dummyProducts: Product[] = [
+const dummyProducts: ProductResponse[] = [
   {
     id: 1,
     name: 'Steel Rod',
     sku: 'ST-ROD-16',
-    category: { id: 1, name: 'Metals' },
+    category: [],
     cost: 200,
     unit: 'kg',
   },
@@ -26,7 +27,7 @@ const dummyProducts: Product[] = [
     id: 2,
     name: 'Copper Wire',
     sku: 'CP-WR-05',
-    category: { id: 2, name: 'Wires' },
+    category: [{ id: 2, name: 'Wires' }],
     cost: 120,
     unit: 'kg',
   },

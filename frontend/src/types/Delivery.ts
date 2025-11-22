@@ -1,4 +1,4 @@
-import type { Product, ProductUnit } from './Master/productTypes'
+import type { ProductResponse, ProductUnit } from './Master/productTypes'
 
 export type DeliveryStatus =
   | 'scheduled'
@@ -8,7 +8,7 @@ export type DeliveryStatus =
 
 export interface DeliveryItem {
   id: number
-  product: Product
+  product: ProductResponse
   quantity: number
   unit: ProductUnit
   notes?: string
