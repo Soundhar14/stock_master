@@ -1,5 +1,5 @@
 import axiosInstance from "../../utils/axios";
-import axios from "axios";
+
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
@@ -35,12 +35,7 @@ export const useFetchWarehouses = () => {
 
       return res.data.data;
     } catch (error) {
-      if (axios.isAxiosError(error)) {
-        toast.error(error.response?.data?.message || "Failed to fetch warehouses");
-      } else {
-        toast.error("Something went wrong while fetching warehouses");
-      }
-      throw new Error("Warehouse fetch failed");
+        handleApiError(error, "Warehouse");
     }
   };
 
@@ -59,19 +54,17 @@ export const useFetchWarehouseOptions = () => {
   const fetchOptions = async (): Promise<DropdownOption[]> => {
     const token = authHandler();
     if (!token) throw new Error("Unauthorized to perform this action.");
-
-    const res = await axiosInstance.get(apiRoutes.warehouse, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-
-    if (res.status !== 200) {
-      throw new Error(res.data?.message || "Failed to fetch warehouses");
+    try{
+        const res = await axiosInstance.get(apiRoutes.warehouse, {
+        headers: { Authorization: `Bearer ${token}` },
+        });
+        return res.data.data.map((wh: Warehouse) => ({
+        id: wh.id,
+        label: `${wh.shortCode} - ${wh.name}`,
+        }));
+    }catch (error) {
+        handleApiError(error, "Warehouse");
     }
-
-    return res.data.data.map((wh: Warehouse) => ({
-      id: wh.id,
-      label: `${wh.shortCode} - ${wh.name}`,
-    }));
   };
 
   return useQuery({
@@ -127,6 +120,7 @@ export const useEditWarehouse = () => {
     const token = authHandler();
     if (!token) throw new Error("Unauthorized to perform this action.");
 
+    try {
     const { id: warehouseId, ...payload } = updated;
 
     const res = await axiosInstance.put(
@@ -136,12 +130,10 @@ export const useEditWarehouse = () => {
         headers: { Authorization: `Bearer ${token}` },
       }
     );
-
-    if (res.status !== 200) {
-      throw new Error(res.data?.message || "Failed to update warehouse");
-    }
-
     return res.data.data;
+  } catch (error) {
+        handleApiError(error, "Warehouse");
+  }
   };
 
   return useMutation({
@@ -149,11 +141,6 @@ export const useEditWarehouse = () => {
     onSuccess: () => {
       toast.success("Warehouse updated successfully");
       queryClient.invalidateQueries({ queryKey: ["warehouses"] });
-    },
-    onError: (error) => {
-      if (axios.isAxiosError(error)) {
-        toast.error(error.response?.data?.message || "Update failed");
-      }
     },
   });
 };
@@ -168,6 +155,7 @@ export const useDeleteWarehouse = () => {
     const token = authHandler();
     if (!token) throw new Error("Unauthorized to perform this action.");
 
+    try{
     const res = await axiosInstance.delete(
       `${apiRoutes.warehouse}/${warehouse.id}`,
       {
@@ -180,6 +168,9 @@ export const useDeleteWarehouse = () => {
     }
 
     return res.data.data;
+} catch (error) {
+    handleApiError(error, "Warehouse");
+}
   };
 
   return useMutation({
@@ -188,10 +179,6 @@ export const useDeleteWarehouse = () => {
       toast.success("Warehouse deleted successfully");
       queryClient.invalidateQueries({ queryKey: ["warehouses"] });
     },
-    onError: (error) => {
-      if (axios.isAxiosError(error)) {
-        toast.error(error.response?.data?.message || "Delete failed");
-      }
-    },
+    
   });
 };

@@ -14,6 +14,7 @@ import { appRoutes } from "../../../routes/appRoutes";
 import type { Warehouse } from "../../../types/Master/Warehouse";
 import { authHandler } from "../../../utils/authHandler";
 import type { FormState } from "../../../types/appTypes";
+import { DeleteWarehouseDialogBox } from "./DeleteWarehouseDialogBox";
 
 const WarehousesPage = () => {
   const navigate = useNavigate();

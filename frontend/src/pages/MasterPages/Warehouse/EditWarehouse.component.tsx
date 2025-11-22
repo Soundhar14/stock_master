@@ -1,91 +1,96 @@
-import { useEffect, useState } from 'react'
-import Input from '../../../components/common/Input'
-import ButtonSm from '../../../components/common/Buttons'
-import type { FormState } from '../../../types/appTypes'
-import {
-  useCreateBranch,
-  useEditBranch,
-} from '../../../queries/masterQueries/BranchQuery'
-import type { BranchDetails } from '../../../types/masterApiTypes'
-import { usersData } from '../../../utils/userData'
-import UserAccessDetails from '../Users.component'
+import { useEffect, useState } from "react";
+import Input from "../../../components/common/Input";
+import ButtonSm from "../../../components/common/Buttons";
+import { useCreateWarehouse, useEditWarehouse } from "../../../queries/Master/Warehouse";
+import type { FormState } from "../../../types/appTypes";
+import type { Warehouse } from "../../../types/Master/Warehouse";
 
-const BranchEdit = ({
-  branchDetails,
+
+
+const WarehouseEdit = ({
+  warehouseDetails,
   formState,
   setFormState,
-  setBranchData,
+  setWarehouseData,
 }: {
-  branchDetails: BranchDetails | null
-  formState: FormState
-  setFormState: React.Dispatch<React.SetStateAction<FormState>>
-  setBranchData: React.Dispatch<React.SetStateAction<BranchDetails | null>>
+  warehouseDetails: Warehouse | null;
+  formState: FormState;
+  setFormState: React.Dispatch<React.SetStateAction<FormState>>;
+  setWarehouseData: React.Dispatch<React.SetStateAction<Warehouse | null>>;
 }) => {
-  const [users, setUsers] = useState(usersData)
-  const [branchData, setBranchDataLocal] = useState<BranchDetails | null>(null)
-  const [newbranchData, setNewBranchData] = useState<BranchDetails | null>(null)
-  const [title, setTitle] = useState('')
 
-  const { mutate: createBranch, isPending, isSuccess } = useCreateBranch()
+  const [warehouseLocal, setWarehouseLocal] = useState<Warehouse | null>(null);
+  const [newWarehouse, setNewWarehouse] = useState<Warehouse | null>(null);
+  const [title, setTitle] = useState("");
+
+  // hooks (shape kept similar to your branch hooks)
+  const { mutate: createWarehouse, isPending, isSuccess } = useCreateWarehouse();
   const {
-    mutate: updateBranch,
+    mutate: updateWarehouse,
     isPending: isUpdatePending,
     isSuccess: isUpdatingSuccess,
-  } = useEditBranch()
+  } = useEditWarehouse();
 
-  const emptyBranch: BranchDetails = {
+  // Minimal empty warehouse object matching your Warehouse type
+  const emptyWarehouse: Warehouse = {
     id: 0,
-    name: '',
-    code: '',
-    addressLine1: '',
-    addressLine2: '',
-    remarks: '',
-  }
+    shortCode: "",
+    name: "",
+    address: "",
+    city: "",
+    locations: [],
+    isActive: true,
+  };
 
+  // initialize local state based on formState / incoming prop
   useEffect(() => {
-    if (formState === 'create') {
-      setBranchDataLocal(emptyBranch)
-      setNewBranchData(emptyBranch)
-      setTitle('')
-    } else if (branchDetails) {
-      setBranchDataLocal(branchDetails)
-      setNewBranchData(branchDetails)
-      setTitle(branchDetails.name) // Lock title
+    if (formState === "create") {
+      setWarehouseLocal(emptyWarehouse);
+      setNewWarehouse(emptyWarehouse);
+      setTitle("");
+    } else if (warehouseDetails) {
+      setWarehouseLocal(warehouseDetails);
+      setNewWarehouse(warehouseDetails);
+      setTitle(warehouseDetails.name || "");
     }
-  }, [branchDetails, formState])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [warehouseDetails, formState]);
 
+  // react to create / update success (same UX as branch)
   useEffect(() => {
     if (isSuccess) {
-      setBranchDataLocal(emptyBranch)
-      setNewBranchData(emptyBranch)
-      setFormState('create')
-      setTitle('')
-    } else if (isUpdatingSuccess && newbranchData) {
-      setBranchDataLocal(newbranchData)
-      setBranchData(newbranchData)
-      setFormState('create')
-      setTitle(newbranchData.name)
+      setWarehouseLocal(emptyWarehouse);
+      setNewWarehouse(emptyWarehouse);
+      setFormState("create");
+      setTitle("");
+    } else if (isUpdatingSuccess && newWarehouse) {
+      setWarehouseLocal(newWarehouse);
+      setWarehouseData(newWarehouse);
+      setFormState("create");
+      setTitle(newWarehouse.name);
     }
-  }, [isSuccess, isUpdatingSuccess])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isSuccess, isUpdatingSuccess]);
 
   const handleCancel = () => {
-    setBranchDataLocal(emptyBranch)
-    setNewBranchData(emptyBranch)
-    setFormState('create')
-    setTitle('')
-  }
+    setWarehouseLocal(emptyWarehouse);
+    setNewWarehouse(emptyWarehouse);
+    setFormState("create");
+    setTitle("");
+  };
 
   const hasData =
-    newbranchData?.name ||
-    newbranchData?.addressLine1 ||
-    newbranchData?.addressLine2
+    Boolean(newWarehouse?.shortCode) ||
+    Boolean(newWarehouse?.name) ||
+    Boolean(newWarehouse?.address) ||
+    Boolean(newWarehouse?.city);
 
-  if (!branchData || !newbranchData) {
+  if (!warehouseLocal || !newWarehouse) {
     return (
       <p className="text-center text-sm text-gray-500">
-        Select a branch to view details.
+        Select a warehouse to view details.
       </p>
-    )
+    );
   }
 
   return (
@@ -94,21 +99,21 @@ const BranchEdit = ({
         <form
           className="flex flex-col gap-3"
           onSubmit={(e) => {
-            e.preventDefault()
-            if (formState === 'create') {
-              createBranch(newbranchData)
+            e.preventDefault();
+            if (formState === "create") {
+              createWarehouse(newWarehouse);
             }
           }}
         >
           <header className="header flex w-full flex-row items-center justify-between">
             <h1 className="text-start text-lg font-semibold text-zinc-800">
-              {formState === 'create'
-                ? 'Branch Configuration'
-                : `${title || 'Branch'} Configuration`}
+              {formState === "create"
+                ? "Warehouse Configuration"
+                : `${title || "Warehouse"} Configuration`}
             </h1>
+
             <section className="ml-auto flex flex-row items-center gap-3">
-              {(formState === 'edit' ||
-                (formState === 'create' && hasData)) && (
+              {(formState === "edit" || (formState === "create" && hasData)) && (
                 <ButtonSm
                   className="font-medium"
                   text="Cancel"
@@ -117,7 +122,8 @@ const BranchEdit = ({
                   type="button"
                 />
               )}
-              {formState === 'display' && branchData.id !== 0 && (
+
+              {formState === "display" && warehouseLocal.id !== 0 && (
                 <ButtonSm
                   className="font-medium"
                   text="Back"
@@ -126,79 +132,98 @@ const BranchEdit = ({
                   type="button"
                 />
               )}
-              {formState === 'create' && (
+
+              {formState === "create" && (
                 <ButtonSm
                   className="font-medium text-white"
-                  text={isPending ? 'Creating...' : 'Create New'}
+                  text={isPending ? "Creating..." : "Create New"}
                   state="default"
                   type="submit"
                 />
               )}
-              {formState === 'edit' && (
+
+              {formState === "edit" && (
                 <ButtonSm
                   className="font-medium text-white disabled:opacity-60"
-                  text={isUpdatePending ? 'Updating...' : 'Save Changes'}
+                  text={isUpdatePending ? "Updating..." : "Save Changes"}
                   state="default"
                   type="button"
-                  onClick={() => updateBranch(newbranchData)}
+                  onClick={() => updateWarehouse(newWarehouse)}
                   disabled={
-                    JSON.stringify(newbranchData) === JSON.stringify(branchData)
+                    JSON.stringify(newWarehouse) === JSON.stringify(warehouseLocal)
                   }
                 />
               )}
             </section>
           </header>
 
-          {/* Branch Details */}
+          {/* Warehouse Details */}
           <section className="branch-details-section flex w-full flex-col gap-2 px-3">
             <Input
               required
-              disabled={formState === 'display'}
-              title="Branch Name"
+              disabled={formState === "display"}
+              title="Short Code"
               type="str"
-              inputValue={newbranchData.name}
-              name="branch"
-              placeholder="Enter branch name"
+              inputValue={newWarehouse.shortCode}
+              name="shortCode"
+              placeholder="WH1-Chennai"
               maxLength={50}
               onChange={(value) =>
-                setNewBranchData({ ...newbranchData, name: value })
+                setNewWarehouse({ ...newWarehouse, shortCode: value })
               }
             />
+
+            <Input
+              required
+              disabled={formState === "display"}
+              title="Warehouse Name"
+              type="str"
+              inputValue={newWarehouse.name}
+              name="name"
+              placeholder="Enter warehouse name"
+              maxLength={100}
+              onChange={(value) =>
+                setNewWarehouse({ ...newWarehouse, name: value })
+              }
+            />
+
             <div className="flex flex-col gap-3">
               <Input
                 required
-                disabled={formState === 'display'}
-                title="Address Line 1"
+                disabled={formState === "display"}
+                title="Address"
                 type="str"
-                inputValue={newbranchData.addressLine1}
-                name="address1"
-                placeholder="Enter address line 1"
-                maxLength={100}
+                inputValue={newWarehouse.address}
+                name="address"
+                placeholder="Enter address"
+                maxLength={200}
                 onChange={(value) =>
-                  setNewBranchData({ ...newbranchData, addressLine1: value })
+                  setNewWarehouse({ ...newWarehouse, address: value })
                 }
               />
+
               <Input
-                disabled={formState === 'display'}
-                title="Address Line 2"
+                disabled={formState === "display"}
+                title="City"
                 type="str"
-                inputValue={newbranchData.addressLine2}
-                name="address2"
-                placeholder="Enter address line 2"
-                maxLength={100}
+                inputValue={newWarehouse.city}
+                name="city"
+                placeholder="City"
+                maxLength={80}
                 onChange={(value) =>
-                  setNewBranchData({ ...newbranchData, addressLine2: value })
+                  setNewWarehouse({ ...newWarehouse, city: value })
                 }
               />
             </div>
+
+            {/* Active toggle could be added here; keeping to original structure */}
           </section>
 
-          {/* User Access Details */}
-          <UserAccessDetails userData={users} setUserData={setUsers} />
+          
         </form>
       </div>
     </main>
-  )
-}
+  );
+};
 
-export default BranchEdit
+export default WarehouseEdit;

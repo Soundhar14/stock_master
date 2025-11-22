@@ -1,29 +1,32 @@
 import ButtonSm from "../../../components/common/Buttons";
-import { useDeleteBranch } from "../../../queries/masterQueries/BranchQuery";
-import type { BranchDetails } from "../../../types/masterApiTypes";
+import { useDeleteWarehouse } from "../../../queries/Master/Warehouse";
 import type { FormState } from "../../../types/appTypes";
+import type { Warehouse } from "../../../types/Master/Warehouse";
 
-export const DeleteBranchDialogBox = ({
-  setIsDeleteBranchDialogOpen,
-  branch,
+
+export const DeleteWarehouseDialogBox = ({
+  setFormState,
+  setWarehouse,
+  setIsDeleteDialogOpen,
+  warehouse,
   onDeleted,
 }: {
-  setIsDeleteBranchDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setFormState: React.Dispatch<React.SetStateAction<FormState>>;
-  setBranch: React.Dispatch<React.SetStateAction<BranchDetails | null>>;
-  branch: BranchDetails;
+  setWarehouse: React.Dispatch<React.SetStateAction<Warehouse | null>>;
+  setIsDeleteDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  warehouse: Warehouse;
   onDeleted?: () => void;
 }) => {
-  const { mutate: deleteBranch, isPending: isDeleteBranchLoading } =
-    useDeleteBranch();
+  const { mutate: deleteWarehouse, isPending: isDeleting } =
+    useDeleteWarehouse();
 
   const handleDelete = () => {
-    deleteBranch(branch, {
+    deleteWarehouse(warehouse, {
       onSuccess: () => {
-        setIsDeleteBranchDialogOpen(false);
-        if (onDeleted) {
-          onDeleted();
-        }
+        setFormState("create");
+        setWarehouse(null);
+        setIsDeleteDialogOpen(false);
+        if (onDeleted) onDeleted();
       },
     });
   };
@@ -31,9 +34,9 @@ export const DeleteBranchDialogBox = ({
   return (
     <div className="flex w-full flex-col gap-4">
       <header className="header flex w-full flex-row items-center justify-between text-lg font-medium text-red-600">
-        Delete Branch
+        Delete Warehouse
         <img
-          onClick={() => setIsDeleteBranchDialogOpen(false)}
+          onClick={() => setIsDeleteDialogOpen(false)}
           className="w-5 cursor-pointer"
           src="/icons/close-icon.svg"
           alt="close"
@@ -41,8 +44,8 @@ export const DeleteBranchDialogBox = ({
       </header>
 
       <p className="text-md font-medium text-zinc-700">
-        Are you sure you want to delete the branch{" "}
-        <strong>{branch.name}</strong>? This action is irreversible.
+        Are you sure you want to delete the warehouse{" "}
+        <strong>{warehouse.name}</strong>? This action is irreversible.
       </p>
 
       <section className="mt-1 grid w-full grid-cols-[repeat(auto-fit,minmax(180px,1fr))] gap-3">
@@ -50,13 +53,14 @@ export const DeleteBranchDialogBox = ({
           className="justify-center font-semibold"
           state="outline"
           text="Cancel"
-          onClick={() => setIsDeleteBranchDialogOpen(false)}
+          onClick={() => setIsDeleteDialogOpen(false)}
         />
+
         <ButtonSm
           className="items-center justify-center bg-red-500 text-center text-white hover:bg-red-700 active:bg-red-500"
           state="default"
           onClick={handleDelete}
-          text={isDeleteBranchLoading ? "Deleting..." : "Delete"}
+          text={isDeleting ? "Deleting..." : "Delete"}
         />
       </section>
     </div>
