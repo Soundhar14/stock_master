@@ -4,5 +4,8 @@ export const appRoutes = {
   dashboard: '/dashboard',
   masterRoutes: {
     master: '/master',
-    categories: '/master/warehouse',}
+    children: {
+      warehouse : '/master/warehouse',
+    }
+  }
 }

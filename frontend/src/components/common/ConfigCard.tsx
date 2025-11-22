@@ -1,4 +1,3 @@
-import { useRecentNavStore } from '@/store/recentlySearchedItems'
 import { ArrowRight } from 'lucide-react'
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -23,18 +22,13 @@ const ConfigCard: React.FC<ConfigCardtype> = ({
   navigateUrl,
 }) => {
   const navigate = useNavigate()
-  const { addRecent, recentItems } = useRecentNavStore()
+ 
 
   return (
     <div
       onClick={() => {
         navigate(navigateUrl)
-        addRecent({
-          img,
-          title,
-          label,
-          navigateUrl,
-        })
+        
       }}
       className="group w-full cursor-pointer rounded-xl bg-white px-4 py-5 shadow-sm transition-all duration-200 hover:scale-3d hover:scale-[1.02] active:scale-[0.98]"
     >

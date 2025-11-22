@@ -48,6 +48,13 @@ const SideNav: React.FC = () => {
               activeIconSrc="/icons/sideNavIcons/dashboard-icon-active.svg"
               onClick={() => navigateToRoute(appRoutes.dashboard)}
             />
+           <NavigationButton
+              labelName="Master"
+              isActive={isRouteActive(appRoutes.masterRoutes.master)}
+              iconSrc="/icons/sideNavIcons/master-icon.svg"
+              activeIconSrc="/icons/sideNavIcons/master-icon-active.svg"
+              onClick={() => navigateToRoute(appRoutes.masterRoutes.master)}
+            />
             
           </div>
         </motion.div>
