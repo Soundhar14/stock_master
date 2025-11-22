@@ -205,3 +205,37 @@ export const useUpdateDelivery = () => {
     },
   })
 }
+
+export const useDeleteDelivery = () => {
+  const queryClient = useQueryClient()
+
+  const remove = async (deliveryId: number) => {
+    try {
+      const token = authHandler()
+
+      const res = await axiosInstance.delete(
+        `${apiRoutes.deliveries}/${deliveryId}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      )
+
+      if (res.status !== 200) {
+        throw new Error(res.data?.message || 'Failed to delete delivery')
+      }
+
+      return deliveryId
+    } catch (error) {
+      handleApiError(error, 'Delivery')
+      throw error
+    }
+  }
+
+  return useMutation({
+    mutationFn: remove,
+    onSuccess: () => {
+      toast.success('Delivery deleted successfully')
+      queryClient.invalidateQueries({ queryKey: ['deliveries'] })
+    },
+  })
+}
