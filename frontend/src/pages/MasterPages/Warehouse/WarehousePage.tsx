@@ -90,7 +90,7 @@ const WarehousesPage = () => {
       </AnimatePresence>
 
       {/* Left side table */}
-      <section className="table-container flex w-full flex-col gap-3 rounded-[12px] md:w-[50%]">
+      <section className="table-container flex w-full flex-col gap-3 rounded-xl md:w-[50%]">
         <header className="flex flex-row items-center justify-between rounded-2xl bg-white p-4 shadow-sm">
           <PageHeader title="Warehouse Configuration" />
         </header>
@@ -118,7 +118,7 @@ const WarehousesPage = () => {
       </section>
 
       {/* Right side form */}
-      <section className="table-container max-h-full w-full flex-col gap-3 rounded-[12px] bg-white/80 p-4 shadow-sm md:w-[50%]">
+      <section className="table-container max-h-full w-full flex-col gap-3 rounded-xl bg-white/80 p-4 shadow-sm md:w-[50%]">
         <WarehouseEdit
           warehouseDetails={warehouse}
           formState={formState}

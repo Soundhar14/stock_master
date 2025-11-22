@@ -6,7 +6,8 @@ import { SignInPage } from "./pages/SignInPage";
 import ProtectedRoute from "./components/layout/ProtectedRoute";
 import MainLayout from "./components/layout/MainLayout";
 import { ErrorPageContent } from "./pages/ErrorPage";
-import MasterPage from "./pages/MasterPages/MasterPage";
+import ProductPage from "./pages/MasterPages/Product/ProductPage";
+import WarehousesPage from "./pages/MasterPages/Warehouse/WarehousePage";
 
 
 
@@ -37,11 +38,19 @@ export default function AppRoutes() {
             <Route
               path={appRoutes.dashboard}
               element={<h1 className="p-4 text-2xl font-bold">Dashboard</h1>}
-            /> 
-            <Route
-              path={appRoutes.masterRoutes.master}
-              element={<MasterPage />}
-            />  
+            />
+
+            <Route path={appRoutes.masterRoutes.warehouse}
+            element={<WarehousesPage/>}
+            />
+               <Route path={appRoutes.masterRoutes.ProductPage}
+            element={<ProductPage/>}
+            />
+          <Route element={<h1>na tha da leo</h1>}
+          path={appRoutes.home}/>
+            {/* Add more protected pages here */}
+            {/* <Route path={appRoutes.products} element={<ProductsPage />} /> */}
+            {/* <Route path={appRoutes.receipts} element={<ReceiptsPage />} /> */}
           </Route>
         </Route>
 
