@@ -9,6 +9,7 @@ import { ErrorPageContent } from "./pages/ErrorPage";
 import ProductPage from "./pages/MasterPages/Product/ProductPage";
 import WarehousesPage from "./pages/MasterPages/Warehouse/WarehousePage";
 import MasterPage from "./pages/MasterPages/MasterPage";
+import CategoriesPage from "./pages/MasterPages/Category/CategoryPage";
 
 
 
@@ -50,7 +51,9 @@ export default function AppRoutes() {
             <Route path={appRoutes.masterRoutes.children.warehouse}
             element={<WarehousesPage/>}
             />
-
+            <Route path={appRoutes.masterRoutes.children.Category}
+            element={<CategoriesPage/>}
+            />
             <Route path={appRoutes.masterRoutes.children.products}
             element={<ProductPage/>}
             />
