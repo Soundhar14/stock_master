@@ -14,7 +14,10 @@ import type {
   DeliveryStatus,
 } from '../types/Delivery'
 import type { ProductResponse, ProductUnit } from '../types/Master/productTypes'
-import { convertToBackendDate } from '../utils/commonUtils'
+import {
+  convertToBackendDate,
+  convertToFrontendDate,
+} from '../utils/commonUtils'
 
 const statusMap: Record<string, DeliveryStatus> = {
   pending: 'scheduled',
@@ -24,9 +27,9 @@ const statusMap: Record<string, DeliveryStatus> = {
   cancelled: 'cancelled',
 }
 
-const defaultProduct = (productId: number): ProductResponse => ({
+const defaultProduct = (productId: number, name?: string): ProductResponse => ({
   id: productId,
-  name: `Product #${productId}`,
+  name: name ?? `Product #${productId}`,
   sku: `SKU-${productId}`,
   category: [{ id: 0, name: 'N/A' }],
   cost: 0,
@@ -40,26 +43,51 @@ const normalizeStatus = (status?: string): DeliveryStatus => {
 }
 
 const mapItems = (items: DeliveryApiResponse['items'] = []): DeliveryItem[] =>
-  items.map((item, index) => ({
-    id: item.productId ?? index,
-    product: defaultProduct(item.productId ?? index),
-    quantity: item.quantity ?? 0,
-    unit: (item.unit ?? 'piece') as ProductUnit,
-  }))
+  items.map((item, index) => {
+    const fallbackId = item.productId ?? index
+    return {
+      id: item.id ?? fallbackId,
+      product:
+        item.product ??
+        defaultProduct(fallbackId, item.productName ?? undefined),
+      quantity: item.quantity ?? 0,
+      unit: (item.unit ?? 'piece') as ProductUnit,
+    }
+  })
+
+const normalizeScheduleDate = (scheduledDate?: string) => {
+  if (!scheduledDate) return ''
+  if (/^\d{2}-\d{2}-\d{4}$/.test(scheduledDate)) {
+    return convertToFrontendDate(scheduledDate)
+  }
+  return scheduledDate
+}
 
 const mapDeliveryResponse = (delivery: DeliveryApiResponse): DeliveryOrder => ({
   id: delivery.id,
   reference: delivery.reference ?? `DEL-${delivery.id}`,
   status: normalizeStatus(delivery.status),
-  fromWarehouseId: delivery.warehouseId ? String(delivery.warehouseId) : '—',
-  fromLocationId: delivery.locationId ? String(delivery.locationId) : undefined,
+  warehouseId: delivery.warehouseId,
+  locationId: delivery.locationId,
+  warehouseName:
+    delivery.warehouse?.[0]?.name ?? delivery.warehouseName ?? undefined,
+  locationName:
+    delivery.location?.[0]?.name ?? delivery.locationName ?? undefined,
+  fromWarehouseId:
+    delivery.warehouse?.[0]?.name ??
+    delivery.warehouseName ??
+    (delivery.warehouseId ? String(delivery.warehouseId) : '—'),
+  fromLocationId:
+    delivery.location?.[0]?.name ??
+    delivery.locationName ??
+    (delivery.locationId ? String(delivery.locationId) : undefined),
   deliveryAddress: delivery.deliveryAddress ?? '—',
   responsibleUserId:
     delivery.responsibleUserId === null ||
     delivery.responsibleUserId === undefined
       ? null
       : String(delivery.responsibleUserId),
-  scheduleDate: convertToBackendDate(delivery.scheduledDate),
+  scheduleDate: normalizeScheduleDate(delivery.scheduledDate),
   customerName: delivery.customerName ?? '—',
   customerContact: delivery.customerContact,
   items: mapItems(delivery.items),
@@ -129,6 +157,50 @@ export const useCreateDelivery = () => {
     mutationFn: create,
     onSuccess: () => {
       toast.success('Delivery created successfully')
+      queryClient.invalidateQueries({ queryKey: ['deliveries'] })
+    },
+  })
+}
+
+interface UpdateDeliveryInput {
+  deliveryId: number
+  payload: CreateDeliveryPayload
+}
+
+export const useUpdateDelivery = () => {
+  const queryClient = useQueryClient()
+
+  const update = async ({ deliveryId, payload }: UpdateDeliveryInput) => {
+    try {
+      const token = authHandler()
+      const cleanedPayload: CreateDeliveryPayload = {
+        ...payload,
+        scheduledDate: convertToBackendDate(payload.scheduledDate),
+      }
+
+      const res = await axiosInstance.patch(
+        `${apiRoutes.deliveries}/${deliveryId}`,
+        cleanedPayload,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      )
+
+      if (res.status !== 200) {
+        throw new Error(res.data?.message || 'Failed to update delivery')
+      }
+
+      return mapDeliveryResponse(res.data.data)
+    } catch (error) {
+      handleApiError(error, 'Delivery')
+      throw error
+    }
+  }
+
+  return useMutation({
+    mutationFn: update,
+    onSuccess: () => {
+      toast.success('Delivery updated successfully')
       queryClient.invalidateQueries({ queryKey: ['deliveries'] })
     },
   })

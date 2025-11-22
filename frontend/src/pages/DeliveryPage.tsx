@@ -69,10 +69,11 @@ const DeliveryPage = () => {
     },
     {
       headingTitle: 'From Warehouse',
-      accessVar: 'fromWarehouseId',
+      accessVar: 'warehouse',
       sortable: true,
       searchable: true,
       className: 'min-w-[160px]',
+      render: (value) => (value ? String(value.name) : 'WH-1'),
     },
 
     {

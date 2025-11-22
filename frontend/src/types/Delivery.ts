@@ -20,6 +20,10 @@ export interface DeliveryOrder {
   status: DeliveryStatus
   fromWarehouseId: string
   fromLocationId?: string
+  warehouseId?: number
+  locationId?: number
+  warehouseName?: string
+  locationName?: string
   deliveryAddress: string
   responsibleUserId: string | null
   scheduleDate?: string
@@ -43,6 +47,17 @@ export interface DeliveryItemPayload {
   unit?: ProductUnit
 }
 
+export interface DeliveryRelationInfo {
+  id: number
+  name?: string
+}
+
+export interface DeliveryApiItem extends DeliveryItemPayload {
+  id?: number
+  productName?: string
+  product?: ProductResponse
+}
+
 export interface CreateDeliveryPayload {
   reference?: string
   status?: DeliveryApiStatus
@@ -57,10 +72,16 @@ export interface CreateDeliveryPayload {
   items: DeliveryItemPayload[]
 }
 
-export interface DeliveryApiResponse extends CreateDeliveryPayload {
+export interface DeliveryApiResponse
+  extends Omit<CreateDeliveryPayload, 'items'> {
   id: number
   reference: string
   status: DeliveryApiStatus
   createdAt: string
   updatedAt?: string
+  items: DeliveryApiItem[]
+  warehouse?: DeliveryRelationInfo[]
+  warehouseName?: string
+  location?: DeliveryRelationInfo[]
+  locationName?: string
 }
