@@ -42,7 +42,8 @@ const createEmptyItem = () => ({
 const generateReference = () => {
   const now = new Date()
   const datePart = `${now.getFullYear()}${`${now.getMonth() + 1}`.padStart(2, '0')}${`${now.getDate()}`.padStart(2, '0')}`
-  return `ref-${datePart}`
+  const timePart = `${`${now.getHours()}`.padStart(2, '0')}${`${now.getMinutes()}`.padStart(2, '0')}${`${now.getSeconds()}`.padStart(2, '0')}`
+  return `ref-${datePart}-${timePart}`
 }
 
 interface CreateDeliveryFormProps {
@@ -146,7 +147,6 @@ const CreateDeliveryForm = ({
   const canSubmit =
     hasValidWarehouse &&
     Boolean(deliveryAddress.trim()) &&
-    Boolean(responsibleUserId.trim()) &&
     Boolean(scheduledDate) &&
     Boolean(customerName.trim()) &&
     validItems.length > 0
@@ -166,10 +166,11 @@ const CreateDeliveryForm = ({
       locationId: selectedLocation.id > 0 ? selectedLocation.id : undefined,
       deliveryAddress: deliveryAddress.trim(),
       responsibleUserId: (() => {
-        const numeric = Number(responsibleUserId)
-        return !Number.isNaN(numeric) && numeric > 0
-          ? numeric
-          : responsibleUserId.trim()
+        const trimmed = responsibleUserId.trim()
+        if (!trimmed) return null
+        const numeric = Number(trimmed)
+        if (!Number.isNaN(numeric) && numeric > 0) return numeric
+        return trimmed
       })(),
       scheduledDate,
       customerName: customerName.trim(),

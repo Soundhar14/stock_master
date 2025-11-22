@@ -89,6 +89,7 @@ const DeliveryPage = () => {
       sortable: true,
       searchable: true,
       className: 'min-w-[150px]',
+      render: (value) => (value ? String(value) : '—'),
     },
 
     {

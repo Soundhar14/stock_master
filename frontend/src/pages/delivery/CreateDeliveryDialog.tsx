@@ -72,7 +72,6 @@ const CreateDeliveryDialog = ({ onClose }: CreateDeliveryDialogProps) => {
   const canSubmit =
     hasValidWarehouse &&
     Boolean(deliveryAddress.trim()) &&
-    Boolean(responsibleUserId.trim()) &&
     Boolean(scheduledDate) &&
     Boolean(customerName.trim()) &&
     validItems.length > 0
@@ -95,10 +94,10 @@ const CreateDeliveryDialog = ({ onClose }: CreateDeliveryDialogProps) => {
           : undefined,
       deliveryAddress: deliveryAddress.trim(),
       responsibleUserId: (() => {
-        const numeric = Number(responsibleUserId)
-        return !Number.isNaN(numeric) && numeric > 0
-          ? numeric
-          : responsibleUserId.trim()
+        const trimmed = responsibleUserId.trim()
+        if (!trimmed) return null
+        const numeric = Number(trimmed)
+        return !Number.isNaN(numeric) && numeric > 0 ? numeric : trimmed
       })(),
       scheduledDate,
       customerName: customerName.trim(),
@@ -158,7 +157,6 @@ const CreateDeliveryDialog = ({ onClose }: CreateDeliveryDialogProps) => {
           onChange={setLocationId}
         />
         <Input
-          required
           title="Responsible User ID"
           placeholder="e.g., 5"
           inputValue={responsibleUserId}

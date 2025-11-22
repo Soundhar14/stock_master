@@ -54,7 +54,11 @@ const mapDeliveryResponse = (delivery: DeliveryApiResponse): DeliveryOrder => ({
   fromWarehouseId: delivery.warehouseId ? String(delivery.warehouseId) : '—',
   fromLocationId: delivery.locationId ? String(delivery.locationId) : undefined,
   deliveryAddress: delivery.deliveryAddress ?? '—',
-  responsibleUserId: String(delivery.responsibleUserId ?? '—'),
+  responsibleUserId:
+    delivery.responsibleUserId === null ||
+    delivery.responsibleUserId === undefined
+      ? null
+      : String(delivery.responsibleUserId),
   scheduleDate: convertToBackendDate(delivery.scheduledDate),
   customerName: delivery.customerName ?? '—',
   customerContact: delivery.customerContact,

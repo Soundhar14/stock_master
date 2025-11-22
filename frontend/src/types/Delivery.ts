@@ -21,7 +21,7 @@ export interface DeliveryOrder {
   fromWarehouseId: string
   fromLocationId?: string
   deliveryAddress: string
-  responsibleUserId: string
+  responsibleUserId: string | null
   scheduleDate?: string
   customerName: string
   customerContact?: string
@@ -49,7 +49,7 @@ export interface CreateDeliveryPayload {
   warehouseId: number
   locationId?: number
   deliveryAddress: string
-  responsibleUserId: number | string
+  responsibleUserId?: number | string | null
   scheduledDate: string
   customerName: string
   customerContact?: string
