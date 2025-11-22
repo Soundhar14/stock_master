@@ -69,11 +69,11 @@ const StockManagementPage = () => {
       className: 'min-w-[160px] max-w-[220px]',
     },
     {
-      headingTitle: 'Location',
-      accessVar: 'location.name',
+      headingTitle: 'Location ID',
+      accessVar: 'locationId',
       searchable: true,
       sortable: true,
-      className: 'min-w-[140px] max-w-[200px]',
+      className: 'min-w-[120px] text-right',
     },
     {
       headingTitle: 'On Hand',

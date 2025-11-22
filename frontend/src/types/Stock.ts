@@ -1,16 +1,12 @@
-import type { Product } from './Product'
-import type { Warehouse } from './Master/Warehouse'
-import type { Location } from './Master/Location'
+import type { Product } from './Master/productTypes'
+import type { Location, Warehouse } from './Master/Warehouse'
 
 export interface Stock {
   id: number
-  productId: number
-  warehouseId: number
-  locationId: number
+  product: Product
+  warehouse: Warehouse
+  location: Location
   onHand: number
   reserved: number
   freeToUse: number
-  product?: Product
-  warehouse?: Warehouse
-  location?: Location
 }

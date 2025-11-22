@@ -7,9 +7,8 @@ import { handleApiError } from '../utils/handleApiError'
 import { apiRoutes } from '../routes/apiRoutes'
 
 import type { Stock } from '../types/Stock'
-import type { Product } from '../types/Product'
+import type { Product } from '../types/Master/productTypes'
 import type { Warehouse } from '../types/Master/Warehouse'
-import type { Location } from '../types/Master/Location'
 
 const shouldUseDummyStock =
   (import.meta.env.VITE_USE_DUMMY_DATA ?? 'true') !== 'false'
@@ -19,7 +18,7 @@ const dummyProducts: Product[] = [
     id: 1,
     name: 'Steel Rod',
     sku: 'ST-ROD-16',
-    category: 'Metals',
+    category: { id: 1, name: 'Metals' },
     cost: 200,
     unit: 'kg',
   },
@@ -27,7 +26,7 @@ const dummyProducts: Product[] = [
     id: 2,
     name: 'Copper Wire',
     sku: 'CP-WR-05',
-    category: 'Wires',
+    category: { id: 2, name: 'Wires' },
     cost: 120,
     unit: 'kg',
   },
@@ -52,36 +51,24 @@ const dummyWarehouses: Warehouse[] = [
   },
 ]
 
-const dummyLocations: Location[] = [
-  { id: 11, name: 'Inbound Dock' },
-  { id: 12, name: 'Cold Storage' },
-  { id: 21, name: 'Picking Lane' },
-]
-
 const dummyStock: Stock[] = [
   {
     id: 101,
-    productId: 1,
-    warehouseId: 1,
-    locationId: 11,
+    location: { id: 11, name: 'Aisle 3, Shelf B' },
     onHand: 120,
     reserved: 20,
     freeToUse: 100,
     product: dummyProducts[0],
     warehouse: dummyWarehouses[0],
-    location: dummyLocations[0],
   },
   {
     id: 102,
-    productId: 2,
-    warehouseId: 2,
-    locationId: 21,
+    location: { id: 12, name: 'Aisle 3, Shelf B' },
     onHand: 80,
     reserved: 15,
     freeToUse: 65,
     product: dummyProducts[1],
     warehouse: dummyWarehouses[1],
-    location: dummyLocations[2],
   },
 ]
 

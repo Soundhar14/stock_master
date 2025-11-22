@@ -40,6 +40,33 @@ const formatLocationsForUpdate = (
     .filter((location): location is UpdateLocationPayload => Boolean(location))
 }
 
+const warehouseFieldsToTrack: Array<keyof Warehouse> = [
+  'shortCode',
+  'name',
+  'address',
+  'city',
+  'isActive',
+]
+
+const buildWarehouseDiffPayload = (original: Warehouse, updated: Warehouse) => {
+  const diff: Record<string, unknown> = {}
+
+  warehouseFieldsToTrack.forEach((field) => {
+    if (updated[field] !== original[field]) {
+      diff[field] = updated[field]
+    }
+  })
+
+  const originalLocations = formatLocationsForUpdate(original.locations)
+  const updatedLocations = formatLocationsForUpdate(updated.locations)
+
+  if (JSON.stringify(originalLocations) !== JSON.stringify(updatedLocations)) {
+    diff.locations = updatedLocations
+  }
+
+  return diff
+}
+
 /**
  * -------------------------------------------
  * Warehouse Service - CRUD Operations
@@ -148,19 +175,25 @@ export const useCreateWarehouse = () => {
 /**
  * ✏️ Edit Warehouse
  */
+type EditWarehouseInput = {
+  original: Warehouse
+  updated: Warehouse
+}
+
 export const useEditWarehouse = () => {
   const queryClient = useQueryClient()
 
-  const edit = async (updated: Warehouse) => {
+  const edit = async ({ original, updated }: EditWarehouseInput) => {
     const token = authHandler()
     if (!token) throw new Error('Unauthorized to perform this action.')
 
     try {
-      const { id: warehouseId, ...rest } = updated
+      const { id: warehouseId } = updated
 
-      const payload = {
-        ...rest,
-        locations: formatLocationsForUpdate(updated.locations),
+      const payload = buildWarehouseDiffPayload(original, updated)
+
+      if (Object.keys(payload).length === 0) {
+        return updated
       }
 
       const res = await axiosInstance.patch(

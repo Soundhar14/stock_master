@@ -96,9 +96,9 @@ const EditStockDialog = ({ stock, onClose }: EditStockDialogProps) => {
           </span>
         </div>
         <div className="flex flex-col">
-          <span className="font-semibold text-slate-500">Location</span>
+          <span className="font-semibold text-slate-500">Location ID</span>
           <span className="text-base font-medium text-slate-800">
-            {stock.location?.name ?? '—'}
+            {stock.location.name ?? '—'}
           </span>
         </div>
       </section>

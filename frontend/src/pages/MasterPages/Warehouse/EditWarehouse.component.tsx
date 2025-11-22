@@ -189,7 +189,12 @@ const WarehouseEdit = ({
                   text={isUpdatePending ? 'Updating...' : 'Save Changes'}
                   state="default"
                   type="button"
-                  onClick={() => updateWarehouse(newWarehouse)}
+                  onClick={() =>
+                    updateWarehouse({
+                      original: warehouseLocal,
+                      updated: newWarehouse,
+                    })
+                  }
                   disabled={
                     JSON.stringify(newWarehouse) ===
                     JSON.stringify(warehouseLocal)
