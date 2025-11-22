@@ -1,35 +1,17 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useCallback } from 'react'
 import { appRoutes } from '../../routes/appRoutes'
 import { motion } from 'motion/react'
 
 const SideNav: React.FC = () => {
   const [activeRoute, setActiveRoute] = useState<string>('')
 
-  useEffect(() => {
-    const currentPath = window.location.pathname
+//  useEffect(() => {
+//   const currentPath = location.pathname
 
-    if (currentPath.startsWith('/master')) {
-      setActiveRoute(appRoutes.masterRoutes.master)
-    } else if (currentPath.startsWith('/dashboard')) {
-      setActiveRoute(appRoutes.dashboard)
-    } else if (currentPath.startsWith('/employees')) {
-      setActiveRoute(appRoutes.employeesRoute.employees)
-    } else if (currentPath.startsWith('/attendance')) {
-      setActiveRoute(appRoutes.attendanceRoutes.attendance)
-    } else if (currentPath.startsWith('/payroll')) {
-      setActiveRoute(appRoutes.PayrollRoutes.payroll)
-    } else if (currentPath.startsWith('/loan')) {
-      setActiveRoute(appRoutes.loanRoutes.loan)
-    } else if (currentPath.startsWith('/approval')) {
-      setActiveRoute(appRoutes.approval)
-    } else if (currentPath.startsWith('/users')) {
-      setActiveRoute(appRoutes.users)
-    } else if (currentPath.startsWith('/reports')) {
-      setActiveRoute(appRoutes.reports)
-    } else {
-      setActiveRoute(currentPath)
-    }
-  }, [])
+//   if (currentPath.startsWith('/master')) {
+//     setActiveRoute(appRoutes.masterRoutes.master)
+//   }
+//  }, [location.pathname])
 
   const navigateToRoute = useCallback((route: string) => {
     setActiveRoute(route)
@@ -37,30 +19,7 @@ const SideNav: React.FC = () => {
     window.dispatchEvent(new PopStateEvent('popstate'))
   }, [])
 
-  // useEffect(() => {
-  //   const handleKeyDown = (e: KeyboardEvent) => {
-  //     const target = e.target as HTMLElement
-
-  //     if (
-  //       target.tagName === 'INPUT' ||
-  //       target.tagName === 'TEXTAREA' ||
-  //       target.isContentEditable
-  //     ) {
-  //       return
-  //     }
-
-  //     if (/^[1-9]$/.test(e.key)) {
-  //       e.preventDefault()
-  //       const index = parseInt(e.key, 10) - 1
-  //       if (navItems[index]) {
-  //         navigateToRoute(navItems[index])
-  //       }
-  //     }
-  //   }
-
-  //   window.addEventListener('keydown', handleKeyDown)
-  //   return () => window.removeEventListener('keydown', handleKeyDown)
-  // }, [navItems, navigateToRoute])
+  
 
   const isRouteActive = (route: string): boolean => {
     return activeRoute === route
@@ -89,66 +48,7 @@ const SideNav: React.FC = () => {
               activeIconSrc="/icons/sideNavIcons/dashboard-icon-active.svg"
               onClick={() => navigateToRoute(appRoutes.dashboard)}
             />
-            <NavigationButton
-              labelName="Employees"
-              isActive={isRouteActive(appRoutes.employeesRoute.employees)}
-              iconSrc="/icons/sideNavIcons/employees-icon.svg"
-              activeIconSrc="/icons/sideNavIcons/employees-icon-active.svg"
-              onClick={() =>
-                navigateToRoute(appRoutes.employeesRoute.employees)
-              }
-            />
-            <NavigationButton
-              labelName="Attendance"
-              isActive={isRouteActive(appRoutes.attendanceRoutes.attendance)}
-              iconSrc="/icons/sideNavIcons/attendance-icon.svg"
-              activeIconSrc="/icons/sideNavIcons/attendance-icon-active.svg"
-              onClick={() =>
-                navigateToRoute(appRoutes.attendanceRoutes.attendance)
-              }
-            />
-            <NavigationButton
-              labelName="Payroll"
-              isActive={isRouteActive(appRoutes.PayrollRoutes.payroll)}
-              iconSrc="/icons/sideNavIcons/payroll-icon.svg"
-              activeIconSrc="/icons/sideNavIcons/payroll-icon-active.svg"
-              onClick={() => navigateToRoute(appRoutes.PayrollRoutes.payroll)}
-            />
-            <NavigationButton
-              labelName="Loan"
-              isActive={isRouteActive(appRoutes.loanRoutes.loan)}
-              iconSrc="/icons/sideNavIcons/loan-icon.svg"
-              activeIconSrc="/icons/sideNavIcons/loan-icon-active.svg"
-              onClick={() => navigateToRoute(appRoutes.loanRoutes.loan)}
-            />
-            <NavigationButton
-              labelName="Approval"
-              isActive={isRouteActive(appRoutes.approval)}
-              iconSrc="/icons/sideNavIcons/approval-icon.svg"
-              activeIconSrc="/icons/sideNavIcons/approval-icon-active.svg"
-              onClick={() => navigateToRoute(appRoutes.approval)}
-            />
-            <NavigationButton
-              labelName="Users"
-              isActive={isRouteActive(appRoutes.users)}
-              iconSrc="/icons/sideNavIcons/users-icon.svg"
-              activeIconSrc="/icons/sideNavIcons/users-icon-active.svg"
-              onClick={() => navigateToRoute(appRoutes.users)}
-            />
-            <NavigationButton
-              labelName="Master"
-              isActive={isRouteActive(appRoutes.masterRoutes.master)}
-              iconSrc="/icons/sideNavIcons/master-icon.svg"
-              activeIconSrc="/icons/sideNavIcons/master-icon-active.svg"
-              onClick={() => navigateToRoute(appRoutes.masterRoutes.master)}
-            />
-            <NavigationButton
-              labelName="Reports"
-              isActive={isRouteActive(appRoutes.reports)}
-              iconSrc="/icons/sideNavIcons/reports-icon.svg"
-              activeIconSrc="/icons/sideNavIcons/reports-icon-active.svg"
-              onClick={() => navigateToRoute(appRoutes.reports)}
-            />
+            
           </div>
         </motion.div>
       </motion.section>
