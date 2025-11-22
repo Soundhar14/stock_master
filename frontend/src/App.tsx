@@ -12,6 +12,7 @@ import MasterPage from './pages/MasterPages/MasterPage'
 import CategoriesPage from './pages/MasterPages/Category/CategoryPage'
 import StockManagementPage from './pages/StockManagementPage'
 import DeliveryPage from './pages/DeliveryPage'
+import OperationsDashboard from './pages/Dashboard'
 
 export default function AppRoutes() {
   return (
@@ -37,7 +38,7 @@ export default function AppRoutes() {
           <Route element={<MainLayout />}>
             <Route
               path={appRoutes.dashboard}
-              element={<h1 className="p-4 text-2xl font-bold">Dashboard</h1>}
+              element={<OperationsDashboard/>}
             />
 
             {/* Master page  */}
