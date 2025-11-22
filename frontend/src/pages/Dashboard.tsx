@@ -23,7 +23,7 @@ export default function OperationsDashboard() {
       <div className=" ">
         {/* Stats Overview */}
         <div className="grid grid-cols-4 gap-2 mb-9">
-          <div className="bg-white rounded-xl p-5 shadow-sm border border-gray-200 hover:shadow-md transition-shadow">
+          <div className="bg-white rounded-xl p-5 border border-gray-200 h  transition-shadow">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-600">Total Pending</p>
@@ -35,7 +35,7 @@ export default function OperationsDashboard() {
             </div>
           </div>
           
-          <div className="bg-white rounded-xl p-5 shadow-sm border border-gray-200 hover:shadow-md transition-shadow">
+          <div className="bg-white rounded-xl p-5 shadow-sm border border-gray-200 h  transition-shadow">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-600">Total Operations</p>
@@ -47,7 +47,7 @@ export default function OperationsDashboard() {
             </div>
           </div>
           
-          <div className="bg-white rounded-xl p-5 shadow-sm border border-gray-200 hover:shadow-md transition-shadow">
+          <div className="bg-white rounded-xl p-5 shadow-sm border border-gray-200 h  transition-shadow">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-600">Late Items</p>
@@ -59,7 +59,7 @@ export default function OperationsDashboard() {
             </div>
           </div>
           
-          <div className="bg-white rounded-xl p-5 shadow-sm border border-gray-200 hover:shadow-md transition-shadow">
+          <div className="bg-white rounded-xl p-5 shadow-sm border border-gray-200 h  transition-shadow">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-600">Waiting</p>
@@ -75,7 +75,7 @@ export default function OperationsDashboard() {
         {/* Main Cards */}
         <div className="grid lg:grid-cols-2 gap-6">
           {/* Receipt Card */}
-          <div className="bg-white rounded-2xl shadow-md border border-gray-200 overflow-hidden hover:shadow-xl transition-all duration-300">
+          <div className="bg-white rounded-2xl     border border-gray-200 overflow-hidden    transition-all duration-300">
             {/* Card Header */}
             <div className="bg-blue-500 px-8 py-6">
               <div className="flex items-center justify-between">
@@ -94,7 +94,7 @@ export default function OperationsDashboard() {
             {/* Card Body */}
             <div className="p-8 h-full flex flex-col ">
               {/* Action Button */}
-              <button className="w-full bg-blue-500 hover:bg-blue-600 active:bg-blue-700 text-white font-semibold py-5 px-6 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 mb-6 group">
+              <button className="w-full bg-blue-500 hover:bg-blue-600 active:bg-blue-700 text-white font-semibold py-5 px-6 rounded-xl transition-all duration-200 shadow-lg    transform hover:-translate-y-0.5 mb-6 group">
                 <div className="flex items-center justify-between">
                   <span className="text-lg">{receiptData.toReceive} to receive</span>
                   <div className="bg-white/20 p-2 rounded-lg group-hover:bg-white/30 transition-colors">
@@ -163,7 +163,7 @@ export default function OperationsDashboard() {
           </div>
 
           {/* Delivery Card */}
-          <div className="bg-white rounded-2xl shadow-md border border-gray-200 overflow-hidden hover:shadow-xl transition-all duration-300">
+          <div className="bg-white rounded-2xl     border border-gray-200 overflow-hidden    transition-all duration-300">
             {/* Card Header */}
             <div className="bg-blue-500 px-8 py-6">
               <div className="flex items-center justify-between">
@@ -182,7 +182,7 @@ export default function OperationsDashboard() {
             {/* Card Body */}
             <div className="p-8">
               {/* Action Button */}
-              <button className="w-full bg-blue-500 hover:bg-blue-600 active:bg-blue-700 text-white font-semibold py-5 px-6 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 mb-6 group">
+              <button className="w-full bg-blue-500 hover:bg-blue-600 active:bg-blue-700 text-white font-semibold py-5 px-6 rounded-xl transition-all duration-200 shadow-lg    transform hover:-translate-y-0.5 mb-6 group">
                 <div className="flex items-center justify-between">
                   <span className="text-lg">{deliveryData.toDeliver} to Deliver</span>
                   <div className="bg-white/20 p-2 rounded-lg group-hover:bg-white/30 transition-colors">
@@ -253,25 +253,7 @@ export default function OperationsDashboard() {
           </div>
         </div>
 
-        {/* Action Bar */}
-        <div className="mt-8 bg-white rounded-2xl shadow-md border border-gray-200 p-6">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <button className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 px-8 rounded-xl transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
-                View All Operations
-              </button>
-              <button className="bg-white border-2 border-blue-500 text-blue-600 hover:bg-blue-50 font-semibold py-3 px-8 rounded-xl transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
-                Generate Report
-              </button>
-              <button className="bg-white border-2 border-gray-300 text-gray-700 hover:bg-gray-50 font-semibold py-3 px-8 rounded-xl transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
-                Export Data
-              </button>
-            </div>
-            <div className="text-sm text-gray-500">
-              <span className="font-medium text-gray-700">Today:</span> Nov 22, 2025
-            </div>
-          </div>
-        </div>
+  
       </div>
     </div>
   );

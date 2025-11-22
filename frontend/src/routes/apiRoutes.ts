@@ -9,4 +9,5 @@ export const apiRoutes = {
   users: '/api/admin/users',
   deliveries: '/api/manager/deliveries',
   stock: '/api/manager/stocks',
+  internalTransfers:"api/internal-transfers"
 }
