@@ -6,7 +6,11 @@ import { apiRoutes } from '../../routes/apiRoutes'
 import { authHandler } from '../../utils/authHandler'
 import { handleApiError } from '../../utils/handleApiError'
 
-import type { ProductRequest ,ProductResponse } from '../../types/Master/productTypes'
+import type { DropdownOption } from '../../components/common/DropDown'
+import type {
+  ProductRequest,
+  ProductResponse,
+} from '../../types/Master/productTypes'
 
 /* -------------------------------
    🔍 Fetch All Products
@@ -38,6 +42,38 @@ export const useFetchProducts = () => {
   })
 }
 
+export const useFetchProductOptions = () => {
+  const fetchOptions = async (): Promise<DropdownOption[]> => {
+    const token = authHandler()
+    if (!token) throw new Error('Unauthorized to perform this action.')
+
+    try {
+      const res = await axiosInstance.get(apiRoutes.products, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+
+      if (res.status !== 200) {
+        throw new Error(res.data?.message || 'Failed to fetch product options')
+      }
+
+      return (res.data?.data ?? []).map((product: ProductResponse) => ({
+        id: product.id,
+        label: `${product.sku ?? product.id} - ${product.name}`,
+      }))
+    } catch (error) {
+      handleApiError(error, 'Product')
+      throw error
+    }
+  }
+
+  return useQuery({
+    queryKey: ['productOptions'],
+    queryFn: fetchOptions,
+    staleTime: 1000 * 60 * 5,
+    retry: 1,
+  })
+}
+
 /* -------------------------------
    ➕ Create Product
 -------------------------------- */
@@ -47,7 +83,6 @@ export const useCreateProduct = () => {
   const createProduct = async (newProduct: ProductRequest) => {
     try {
       const token = authHandler()
-      
 
       const res = await axiosInstance.post(apiRoutes.products, newProduct, {
         headers: { Authorization: `Bearer ${token}` },
@@ -82,7 +117,6 @@ export const useEditProduct = () => {
   const editProduct = async (updatedProduct: ProductRequest) => {
     const token = authHandler()
     const { id, ...payload } = updatedProduct
- 
 
     const res = await axiosInstance.patch(
       `${apiRoutes.products}/${id}`,

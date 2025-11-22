@@ -5,6 +5,7 @@ import { AnimatePresence } from 'motion/react'
 import DialogBox from '../components/common/DialogBox'
 import ErrorComponent from '../components/common/Error'
 import GenericTable, { type DataCell } from '../components/common/GenericTable'
+import ButtonSm from '../components/common/Buttons'
 import MasterPagesSkeleton from '../components/masterPage.components/LoadingSkeleton'
 import PageHeader from '../components/masterPage.components/PageHeader'
 import { useFetchStock } from '../queries/StockQueries'
@@ -12,6 +13,8 @@ import { appRoutes } from '../routes/appRoutes'
 import { authHandler } from '../utils/authHandler'
 import type { Stock } from '../types/Stock'
 import EditStockDialog from './StockManagement/EditStockDialog'
+import DeleteStockDialog from './StockManagement/DeleteStockDialog'
+import CreateStock from './StockManagement/CreateStock'
 
 const StockManagementPage = () => {
   const navigate = useNavigate()
@@ -27,6 +30,11 @@ const StockManagementPage = () => {
   const [selectedStockRecord, setSelectedStockRecord] = useState<Stock | null>(
     null
   )
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
+  const [stockPendingDelete, setStockPendingDelete] = useState<Stock | null>(
+    null
+  )
+  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false)
 
   const handleDialogToggle: Dispatch<SetStateAction<boolean>> = (value) => {
     setIsEditDialogOpen((prev) => {
@@ -41,6 +49,15 @@ const StockManagementPage = () => {
   const handleDialogClose = () => {
     setSelectedStockRecord(null)
     setIsEditDialogOpen(false)
+  }
+
+  const handleDeleteDialogClose = () => {
+    setStockPendingDelete(null)
+    setIsDeleteDialogOpen(false)
+  }
+
+  const handleCreateDialogClose = () => {
+    setIsCreateDialogOpen(false)
   }
 
   if (isLoading) return <MasterPagesSkeleton />
@@ -69,11 +86,13 @@ const StockManagementPage = () => {
       className: 'min-w-[160px] max-w-[220px]',
     },
     {
-      headingTitle: 'Location ID',
-      accessVar: 'locationId',
+      headingTitle: 'Location',
+      accessVar: 'location.name',
       searchable: true,
       sortable: true,
-      className: 'min-w-[120px] text-right',
+      className: 'min-w-[160px] max-w-[220px]',
+      render: (_, row: Stock) =>
+        row.location?.name ?? row.locationId ?? row.location?.id ?? '—',
     },
     {
       headingTitle: 'On Hand',
@@ -103,11 +122,17 @@ const StockManagementPage = () => {
       <section className="table-container flex w-full flex-col gap-4 rounded-xl bg-white p-4 shadow-sm">
         <header className="flex flex-row items-center justify-between">
           <PageHeader title="Stock Management" />
+          <ButtonSm
+            state="default"
+            text="Add Stock"
+            className="text-white"
+            onClick={() => setIsCreateDialogOpen(true)}
+          />
         </header>
       </section>
       <GenericTable
-        isMasterTable
         data={stockRecords ?? []}
+        isMasterTable={false}
         dataCell={dataCell}
         isLoading={isLoading}
         rowKey={(row) => row.id}
@@ -117,8 +142,25 @@ const StockManagementPage = () => {
           setSelectedStockRecord(row as Stock)
           setIsEditDialogOpen(true)
         }}
+        onDelete={(row) => {
+          setStockPendingDelete(row as Stock)
+          setIsDeleteDialogOpen(true)
+        }}
       />
       <AnimatePresence>
+        {isCreateDialogOpen && (
+          <DialogBox setToggleDialogueBox={setIsCreateDialogOpen} width="520px">
+            <CreateStock onClose={handleCreateDialogClose} />
+          </DialogBox>
+        )}
+        {isDeleteDialogOpen && stockPendingDelete && (
+          <DialogBox setToggleDialogueBox={setIsDeleteDialogOpen} width="480px">
+            <DeleteStockDialog
+              stock={stockPendingDelete}
+              onClose={handleDeleteDialogClose}
+            />
+          </DialogBox>
+        )}
         {isEditDialogOpen && selectedStockRecord && (
           <DialogBox setToggleDialogueBox={handleDialogToggle} width="520px">
             <EditStockDialog

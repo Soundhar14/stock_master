@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import { toast } from 'react-toastify'
 
 import Input from '../../components/common/Input'
 import ButtonSm from '../../components/common/Buttons'
@@ -23,6 +24,10 @@ const EditStockDialog = ({ stock, onClose }: EditStockDialogProps) => {
     reserved: stock.reserved,
   })
 
+  const productId = stock.productId ?? stock.product?.id ?? null
+  const warehouseId = stock.warehouseId ?? stock.warehouse?.id ?? null
+  const locationId = stock.locationId ?? stock.location?.id ?? null
+
   const freeToUse = useMemo(() => {
     const computed = formValues.onHand - formValues.reserved
     return computed >= 0 ? computed : 0
@@ -31,16 +36,28 @@ const EditStockDialog = ({ stock, onClose }: EditStockDialogProps) => {
   const hasValidationError = formValues.reserved > formValues.onHand
   const isDirty =
     formValues.onHand !== stock.onHand || formValues.reserved !== stock.reserved
+  const hasEntityContext = Boolean(productId && warehouseId)
+  const canSubmit = isDirty && !hasValidationError && hasEntityContext
 
   const { mutate: updateStock, isPending } = useUpdateStock()
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    if (hasValidationError || !isDirty) return
+    if (!canSubmit) {
+      if (!hasEntityContext) {
+        toast.error(
+          'Missing product or warehouse reference for this stock item.'
+        )
+      }
+      return
+    }
 
     updateStock(
       {
         id: stock.id,
+        productId: productId ?? 0,
+        warehouseId: warehouseId ?? 0,
+        locationId,
         onHand: formValues.onHand,
         reserved: formValues.reserved,
         freeToUse,
@@ -96,12 +113,21 @@ const EditStockDialog = ({ stock, onClose }: EditStockDialogProps) => {
           </span>
         </div>
         <div className="flex flex-col">
-          <span className="font-semibold text-slate-500">Location ID</span>
+          <span className="font-semibold text-slate-500">Location</span>
           <span className="text-base font-medium text-slate-800">
-            {stock.location.name ?? '—'}
+            {stock.location?.name ??
+              stock.locationId ??
+              stock.location?.id ??
+              '—'}
           </span>
         </div>
       </section>
+      {!hasEntityContext && (
+        <p className="text-sm text-amber-600">
+          Product or warehouse information is missing. Please reload the record
+          before updating.
+        </p>
+      )}
 
       <section className="flex flex-col gap-3">
         <Input
@@ -151,7 +177,7 @@ const EditStockDialog = ({ stock, onClose }: EditStockDialogProps) => {
             state="default"
             type="submit"
             className="min-w-[140px] justify-center text-white"
-            disabled={isPending || hasValidationError}
+            disabled={isPending || !canSubmit}
           />
         )}
       </section>

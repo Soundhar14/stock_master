@@ -91,7 +91,6 @@ const DialogBox: React.FC<DialogBoxProps> = ({
       //top positipon is handled via motion variant props y distance
     >
       <div
-        ref={containerRef}
         className={`flex flex-col bg-white outline-1 outline-gray-300 backdrop-blur-sm ${
           isSideDrawer
             ? `h-screen p-6 shadow-xl ${width ? '' : 'w-[350px]'}`
