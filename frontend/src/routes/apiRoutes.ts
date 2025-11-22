@@ -5,6 +5,7 @@ export const apiRoutes = {
   warehouse: '/api/admin/warehouses',
   products: '/api/admin/products',
   location: '/api/master/locations',
-  category: '/api/admin/categories',
+  category: '/api/master/categories',
+  deliveries: '/api/inventory/deliveries',
   stock: '/api/inventory/stock',
 }

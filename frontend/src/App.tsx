@@ -11,6 +11,7 @@ import WarehousesPage from './pages/MasterPages/Warehouse/WarehousePage'
 import MasterPage from './pages/MasterPages/MasterPage'
 import CategoriesPage from './pages/MasterPages/Category/CategoryPage'
 import StockManagementPage from './pages/StockManagementPage'
+import DeliveryPage from './pages/DeliveryPage'
 
 export default function AppRoutes() {
   return (
@@ -63,6 +64,8 @@ export default function AppRoutes() {
               path={appRoutes.stockManagement}
               element={<StockManagementPage />}
             />
+            {/* Delivery managment page */}
+            <Route path={appRoutes.delivery} element={<DeliveryPage />} />
           </Route>
         </Route>
 

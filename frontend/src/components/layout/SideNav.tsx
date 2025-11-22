@@ -11,6 +11,12 @@ const SideNav: React.FC = () => {
     if (currentPath.startsWith('/master')) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setActiveRoute(appRoutes.masterRoutes.master)
+    } else if (currentPath.startsWith('/stock-management')) {
+      setActiveRoute(appRoutes.stockManagement)
+    } else if (currentPath.startsWith('/dashboard')) {
+      setActiveRoute(appRoutes.dashboard)
+    } else if (currentPath.startsWith('/delivery')) {
+      setActiveRoute(appRoutes.delivery)
     }
   }, [location.pathname])
 
@@ -60,6 +66,13 @@ const SideNav: React.FC = () => {
               iconSrc="/icons/sideNavIcons/approval-icon.svg"
               activeIconSrc="/icons/sideNavIcons/approval-icon-active.svg"
               onClick={() => navigateToRoute(appRoutes.stockManagement)}
+            />
+            <NavigationButton
+              labelName="Delivery"
+              isActive={isRouteActive(appRoutes.delivery)}
+              iconSrc="/icons/sideNavIcons/approval-icon.svg"
+              activeIconSrc="/icons/sideNavIcons/approval-icon-active.svg"
+              onClick={() => navigateToRoute(appRoutes.delivery)}
             />
           </div>
         </motion.div>
