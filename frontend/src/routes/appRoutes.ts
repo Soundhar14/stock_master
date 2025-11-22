@@ -8,6 +8,7 @@ export const appRoutes = {
       warehouse: '/master/warehouse',
       products: '/master/products',
       Category: '/master/category',
+      users: '/master/users',
     },
   },
   stockManagement: '/stock-management',

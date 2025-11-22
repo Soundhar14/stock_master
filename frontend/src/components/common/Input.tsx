@@ -1,4 +1,3 @@
-
 import { motion } from 'framer-motion'
 import React from 'react'
 
@@ -46,6 +45,8 @@ interface InputProps<T extends string | number> {
   viewMode?: boolean
   /** Extra custom CSS classes */
   className?: string
+  /** Native input type override (e.g., password) */
+  htmlType?: React.HTMLInputTypeAttribute
 }
 
 /**
@@ -80,8 +81,9 @@ const Input = <T extends string | number>({
   disabled = false,
   minLength = 0,
   viewMode = false, //depriciate dont-use
+  htmlType,
 }: InputProps<T>) => {
-  const inputType = type === 'num' ? 'number' : 'text'
+  const inputType = htmlType ?? (type === 'num' ? 'number' : 'text')
 
   /**
    * Handles input changes with type-aware validation.
@@ -372,7 +374,7 @@ export const DateInput: React.FC<DateInputProps> = ({
     </div>
   )
 }
-import { useState,  useRef } from 'react'
+import { useState, useRef } from 'react'
 
 interface AutoSuggestInputProps {
   title: string
@@ -397,15 +399,12 @@ export const AutoSuggestInput: React.FC<AutoSuggestInputProps> = ({
   const inputValue = controlledInputValue ?? internalInputValue // controlled or internal
   const setInputValue = onInputChange ?? setInternalInputValue
 
-
   const [suggestions, setSuggestions] = useState<DropdownOption[]>([])
   const [isVisible, setIsVisible] = useState(false)
   const [selectedIndex, setSelectedIndex] = useState(-1)
   const listRef = useRef<HTMLUListElement>(null)
 
-
   // debounce controlled/internal inputValue
-
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'ArrowDown') {
@@ -468,9 +467,7 @@ export const AutoSuggestInput: React.FC<AutoSuggestInputProps> = ({
                 index === selectedIndex ? 'bg-purple-200' : 'hover:bg-gray-100'
               }`}
             >
-              <div className="text-sm font-medium">
-                {  item.label}
-              </div>
+              <div className="text-sm font-medium">{item.label}</div>
             </li>
           ))}
         </ul>

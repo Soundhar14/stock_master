@@ -10,6 +10,7 @@ import ProductPage from './pages/MasterPages/Product/ProductPage'
 import WarehousesPage from './pages/MasterPages/Warehouse/WarehousePage'
 import MasterPage from './pages/MasterPages/MasterPage'
 import CategoriesPage from './pages/MasterPages/Category/CategoryPage'
+import UsersPage from './pages/MasterPages/Users/UsersPage'
 import StockManagementPage from './pages/StockManagementPage'
 import DeliveryPage from './pages/DeliveryPage'
 import OperationsDashboard from './pages/Dashboard'
@@ -38,7 +39,7 @@ export default function AppRoutes() {
           <Route element={<MainLayout />}>
             <Route
               path={appRoutes.dashboard}
-              element={<OperationsDashboard/>}
+              element={<OperationsDashboard />}
             />
 
             {/* Master page  */}
@@ -59,6 +60,10 @@ export default function AppRoutes() {
             <Route
               path={appRoutes.masterRoutes.children.products}
               element={<ProductPage />}
+            />
+            <Route
+              path={appRoutes.masterRoutes.children.users}
+              element={<UsersPage />}
             />
             {/* Stock managment page */}
             <Route
