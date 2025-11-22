@@ -13,7 +13,7 @@ import ErrorComponent from '../../../components/common/Error'
 
 import { appRoutes } from '../../../routes/appRoutes'
 import type { FormState } from '../../../types/appTypes'
-import type { Product } from '../../../types/Master/productTypes'
+import type { ProductResponse } from '../../../types/Master/productTypes'
 
 import GenericTable, {
   type DataCell,
@@ -22,98 +22,98 @@ import { authHandler } from '../../../utils/authHandler'
 
 const ProductPage = () => {
 
- const dummyProducts: Product[] = [
-  {
-    id: 1,
-    name: "Steel Rod",
-    sku: "SR-001",
-    category: { id: 1, name: "Raw Materials" },
-    cost: 200,
-    unit: "kg",
-    companyId: 3,
-  },
-  {
-    id: 2,
-    name: "Copper Wire",
-    sku: "CW-257",
-    category: { id: 1, name: "Raw Materials" },
-    cost: 480,
-    unit: "roll",
-    companyId: 3,
-  },
-  {
-    id: 3,
-    name: "PVC Pipe",
-    sku: "PVC-102",
-    category: { id: 2, name: "Hardware" },
-    cost: 150,
-    unit: "meter",
-    companyId: 3,
-  },
-  {
-    id: 4,
-    name: "Lubricant Oil",
-    sku: "LO-550",
-    category: { id: 3, name: "Chemicals" },
-    cost: 90,
-    unit: "litre",
-    companyId: 3,
-  },
-  {
-    id: 5,
-    name: "Packing Box",
-    sku: "PB-900",
-    category: { id: 4, name: "Packaging" },
-    cost: 12,
-    unit: "piece",
-    companyId: 3,
-  },
-  {
-    id: 6,
-    name: "Aluminium Sheet",
-    sku: "AL-332",
-    category: { id: 1, name: "Raw Materials" },
-    cost: 780,
-    unit: "kg",
-    companyId: 3,
-  },
-  {
-    id: 7,
-    name: "Cable Bundle",
-    sku: "CB-778",
-    category: { id: 2, name: "Hardware" },
-    cost: 350,
-    unit: "bundle",
-    companyId: 3,
-  },
-  {
-    id: 8,
-    name: "Plastic Granules",
-    sku: "PG-420",
-    category: { id: 3, name: "Chemicals" },
-    cost: 65,
-    unit: "kg",
-    companyId: 3,
-  },
-  {
-    id: 9,
-    name: "Shrink Wrap",
-    sku: "SW-210",
-    category: { id: 4, name: "Packaging" },
-    cost: 30,
-    unit: "roll",
-    companyId: 3,
-  },
-  {
-    id: 10,
-    name: "Metal Screws",
-    sku: "MS-010",
-    category: { id: 2, name: "Hardware" },
-    cost: 5,
-    unit: "packet",
-    companyId: 3,
-  },
-];
+//  const dummyProducts: Product[] = [
+//   {
+//     id: 1,
+//     name: "Steel Rod",
+//     sku: "SR-001",
+//     category: { id: 1, name: "Raw Materials" },
+//     cost: 200,
+//     unit: "kg",
+//     companyId: 3,
+//   },
+//   {
+//     id: 2,
+//     name: "Copper Wire",
+//     sku: "CW-257",
+//     category: { id: 1, name: "Raw Materials" },
+//     cost: 480,
+//     unit: "roll",
+//     companyId: 3,
+//   },
+//   {
+//     id: 3,
+//     name: "PVC Pipe",
+//     sku: "PVC-102",
+//     category: { id: 2, name: "Hardware" },
+//     cost: 150,
+//     unit: "meter",
+//     companyId: 3,
+//   },
+//   {
+//     id: 4,
+//     name: "Lubricant Oil",
+//     sku: "LO-550",
+//     category: { id: 3, name: "Chemicals" },
+//     cost: 90,
+//     unit: "litre",
+//     companyId: 3,
+//   },
+//   {
+//     id: 5,
+//     name: "Packing Box",
+//     sku: "PB-900",
+//     category: { id: 4, name: "Packaging" },
+//     cost: 12,
+//     unit: "piece",
+//     companyId: 3,
+//   },
+//   {
+//     id: 6,
+//     name: "Aluminium Sheet",
+//     sku: "AL-332",
+//     category: { id: 1, name: "Raw Materials" },
+//     cost: 780,
+//     unit: "kg",
+//     companyId: 3,
+//   },
+//   {
+//     id: 7,
+//     name: "Cable Bundle",
+//     sku: "CB-778",
+//     category: { id: 2, name: "Hardware" },
+//     cost: 350,
+//     unit: "bundle",
+//     companyId: 3,
+//   },
+//   {
+//     id: 8,
+//     name: "Plastic Granules",
+//     sku: "PG-420",
+//     category: { id: 3, name: "Chemicals" },
+//     cost: 65,
+//     unit: "kg",
+//     companyId: 3,
+//   },
+//   {
+//     id: 9,
+//     name: "Shrink Wrap",
+//     sku: "SW-210",
+//     category: { id: 4, name: "Packaging" },
+//     cost: 30,
+//     unit: "roll",
+//     companyId: 3,
+//   },
+//   {
+//     id: 10,
+//     name: "Metal Screws",
+//     sku: "MS-010",
+//     category: { id: 2, name: "Hardware" },
+//     cost: 5,
+//     unit: "packet",
+//     companyId: 3,
+//   },
+// ];
   const navigate = useNavigate()
 
   // 🔐 Auth Check
@@ -128,23 +128,23 @@ const ProductPage = () => {
   const [isDeleteProductDialogOpen, setIsDeleteProductDialogOpen] =
     useState(false)
 
-  const [product, setProduct] = useState<Product | null>(null)
+  const [product, setProduct] = useState<ProductResponse | null>(null)
   const [formState, setFormState] = useState<FormState>('create')
 
-  // Fetch products
-  // const {
-  //   data: products,
-  //   isLoading,
-  //   isError,
-  // } = useFetchProducts()
-const products = dummyProducts
+
+  const {
+    data: products,
+    isLoading,
+    isError,
+  } = useFetchProducts()
+
   const handleProductDeleted = () => {
     setProduct(null)
     setFormState('create')
   }
 
-  // if (isLoading) return <MasterPagesSkeleton />
-  // if (isError) return <ErrorComponent />
+  if (isLoading) return <MasterPagesSkeleton />
+  if (isError) return <ErrorComponent />
 
   // Table Columns
   const dataCell: DataCell[] = [

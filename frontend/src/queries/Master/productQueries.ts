@@ -6,13 +6,13 @@ import { apiRoutes } from '../../routes/apiRoutes'
 import { authHandler } from '../../utils/authHandler'
 import { handleApiError } from '../../utils/handleApiError'
 
-import type { Product } from '../../types/Master/productTypes'
+import type { ProductRequest ,ProductResponse } from '../../types/Master/productTypes'
 
 /* -------------------------------
    🔍 Fetch All Products
 -------------------------------- */
 export const useFetchProducts = () => {
-  const fetchProducts = async (): Promise<Product[]> => {
+  const fetchProducts = async (): Promise<ProductResponse[]> => {
     try {
       const token = authHandler()
       const res = await axiosInstance.get(apiRoutes.products, {
@@ -44,10 +44,10 @@ export const useFetchProducts = () => {
 export const useCreateProduct = () => {
   const queryClient = useQueryClient()
 
-  const createProduct = async (newProduct: Product) => {
+  const createProduct = async (newProduct: ProductRequest) => {
     try {
       const token = authHandler()
-      newProduct.companyId = 3
+      
 
       const res = await axiosInstance.post(apiRoutes.products, newProduct, {
         headers: { Authorization: `Bearer ${token}` },
@@ -79,12 +79,12 @@ export const useCreateProduct = () => {
 export const useEditProduct = () => {
   const queryClient = useQueryClient()
 
-  const editProduct = async (updatedProduct: Product) => {
+  const editProduct = async (updatedProduct: ProductRequest) => {
     const token = authHandler()
     const { id, ...payload } = updatedProduct
-    payload.companyId = 3
+ 
 
-    const res = await axiosInstance.put(
+    const res = await axiosInstance.patch(
       `${apiRoutes.products}/${id}`,
       payload,
       {
@@ -119,7 +119,7 @@ export const useEditProduct = () => {
 export const useDeleteProduct = () => {
   const queryClient = useQueryClient()
 
-  const deleteProduct = async (product: Product) => {
+  const deleteProduct = async (product: ProductResponse) => {
     const token = authHandler()
 
     const res = await axiosInstance.delete(

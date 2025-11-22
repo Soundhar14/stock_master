@@ -121,7 +121,7 @@ export const useEditCategory = () => {
     if (!token) throw new Error("Unauthorized to perform this action.");
 
     try {
-      const res = await axiosInstance.put(
+      const res = await axiosInstance.patch(
         `${apiRoutes.category}/${updated.id}`,
         { name: updated.name },
         {

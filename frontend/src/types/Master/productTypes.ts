@@ -15,12 +15,25 @@ export interface ProductCategory {
   name: string
 }
 
-export interface Product {
-  id: number
-  name: string
-  sku: string
-  category: ProductCategory
-  cost: number
-  unit: ProductUnit
-  companyId?: number
+export interface ProductRequest {
+  id?: number;
+  name: string;
+  sku: string;
+  description: string;
+  categoryId: number;
+  cost: number;
+  unit: string
 }
+
+
+
+export interface ProductResponse {
+  id: number;
+  name: string;
+  sku: string;
+  category: ProductCategory[]; // API returns category array
+  cost: number;
+  unit: string;
+}
+
+
